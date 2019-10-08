@@ -5,6 +5,8 @@ namespace emlang
 {
     class Program
     {
+		private static bool hadError = false;
+
         static void Main(string[] args)
         {
 			if(args.Length > 1)
@@ -28,6 +30,11 @@ namespace emlang
 			Console.WriteLine($"Running file {path}");
 			string code = System.IO.File.ReadAllText(path);
 			run(code);
+			
+			if(hadError)
+			{
+				Environment.Exit(65);
+			}
 		}
 
 		static void runPrompt()
@@ -37,6 +44,7 @@ namespace emlang
 				Console.Write("> ");
 				string code = Console.ReadLine();
 				run(code);
+				hadError = false;
 			}
 		}
 
@@ -49,6 +57,17 @@ namespace emlang
 			{
 				Console.WriteLine(token);
 			}
+		}
+
+		static void error(int line, string message)
+		{
+			report(line, "", message);
+		}
+
+		private static void report(int line, string at, string message)
+		{
+			Console.WriteLine($"Error [{line}] pos {at} - {message}");
+			hadError = true;	
 		}
     }
 }
