@@ -1,0 +1,11 @@
+/home/nath/Documents/git/emlang/bin/Debug/netcoreapp2.2/emlang.deps.json
+/home/nath/Documents/git/emlang/bin/Debug/netcoreapp2.2/emlang.runtimeconfig.json
+/home/nath/Documents/git/emlang/bin/Debug/netcoreapp2.2/emlang.runtimeconfig.dev.json
+/home/nath/Documents/git/emlang/bin/Debug/netcoreapp2.2/emlang.dll
+/home/nath/Documents/git/emlang/bin/Debug/netcoreapp2.2/emlang.pdb
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.csprojAssemblyReference.cache
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.csproj.CoreCompileInputs.cache
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.AssemblyInfoInputs.cache
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.AssemblyInfo.cs
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.dll
+/home/nath/Documents/git/emlang/obj/Debug/netcoreapp2.2/emlang.pdb
