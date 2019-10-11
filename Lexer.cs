@@ -40,6 +40,15 @@ namespace emlang
 			switch(c)
 			{
 				case '(': addToken(TokenType.LEFT_PAREN); break;
+				case ')': addToken(TokenType.RIGHT_PAREN); break;
+				case '{': addToken(TokenType.LEFT_BRACE); break;
+				case '}': addToken(TokenType.RIGHT_BRACE); break;
+				case ',': addToken(TokenType.COMMA); break;
+				case '.': addToken(TokenType.PERIOD); break;
+				case ';': addToken(TokenType.SEMICOLON); break;
+				case '+': addToken(TokenType.PLUS); break;
+				case '-': addToken(TokenType.MINUS); break;
+				case '*': addToken(TokenType.STAR); break;
 			}	
 		}
 
@@ -56,6 +65,8 @@ namespace emlang
 
 		private void addToken(TokenType type, Object literal)
 		{
+			string text = source.Substring(start, (current-start));
+			tokens.Add(new Token(type, text, literal, line));
 			Console.WriteLine($"added token {type}");
 		}
 	}
