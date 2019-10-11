@@ -49,7 +49,18 @@ namespace emlang
 				case '+': addToken(TokenType.PLUS); break;
 				case '-': addToken(TokenType.MINUS); break;
 				case '*': addToken(TokenType.STAR); break;
+
+				default: Program.error(current, $"Unexpected token: {c}"); break;
 			}	
+		}
+
+		private bool match(char expected)
+		{
+			if(isAtEnd()){return(false);}
+			if(source[current] != expected){return(false);}
+
+			current = current + 1;
+			return(true);
 		}
 
 		private char advance()

@@ -59,14 +59,15 @@ namespace emlang
 			}
 		}
 
-		static void error(int line, string message)
+		public static void error(int line, string message)
 		{
 			report(line, "", message);
 		}
 
 		private static void report(int line, string at, string message)
 		{
-			Console.WriteLine($"Error [{line}] pos {at} - {message}");
+			//Console.WriteLine($"Error [{line}] pos {at} - {message}");
+			Console.WriteLine($"Error [{line}] - {message}");
 			hadError = true;	
 		}
     }
