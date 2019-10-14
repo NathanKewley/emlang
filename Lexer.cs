@@ -39,6 +39,7 @@ namespace emlang
 
 			switch(c)
 			{
+				// single character lexmes
 				case '(': addToken(TokenType.LEFT_PAREN); break;
 				case ')': addToken(TokenType.RIGHT_PAREN); break;
 				case '{': addToken(TokenType.LEFT_BRACE); break;
@@ -49,11 +50,32 @@ namespace emlang
 				case '+': addToken(TokenType.PLUS); break;
 				case '-': addToken(TokenType.MINUS); break;
 				case '*': addToken(TokenType.STAR); break;
+
+				// dual character lexmes
 				case '!': addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
 				case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
 				case '<': addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
 				case '>': addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
 
+				// / & comments
+				case '/': 
+					if(match('/'))
+					{
+						Console.WriteLine("comment detected");
+						while(peek() != '\n' && !isAtEnd()){advance();}
+					}
+					else{
+						addToken(TokenType.SLASH);
+					}	
+					break;
+
+				// special character lexmes
+				case '\n': line = line + 1; break;
+				case ' ': break;
+				case '\r': break;
+				case '\t': break;
+
+				// throw error on enexpected tokens
 				default: Program.error(current, $"Unexpected token: {c}"); break;
 			}	
 		}
@@ -83,6 +105,12 @@ namespace emlang
 			string text = source.Substring(start, (current-start));
 			tokens.Add(new Token(type, text, literal, line));
 			Console.WriteLine($"added token {type}");
+		}
+
+		private char peek()
+		{
+			if(isAtEnd()){return '\0';}
+			return(source[current]);
 		}
 	}
 }
