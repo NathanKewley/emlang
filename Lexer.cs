@@ -50,24 +50,16 @@ namespace emlang
 				case '+': addToken(TokenType.PLUS); break;
 				case '-': addToken(TokenType.MINUS); break;
 				case '*': addToken(TokenType.STAR); break;
+				
+				// function callouts
+				case '/': slash(); break;
+				case '"': stringLiteral(); break;
 
 				// dual character lexmes
 				case '!': addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
 				case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
 				case '<': addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
 				case '>': addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
-
-				// / & comments
-				case '/': 
-					if(match('/'))
-					{
-						Console.WriteLine("comment detected");
-						while(peek() != '\n' && !isAtEnd()){advance();}
-					}
-					else{
-						addToken(TokenType.SLASH);
-					}	
-					break;
 
 				// special character lexmes
 				case '\n': line = line + 1; break;
@@ -76,8 +68,47 @@ namespace emlang
 				case '\t': break;
 
 				// throw error on enexpected tokens
-				default: Program.error(current, $"Unexpected token: {c}"); break;
+				default: Program.error(line, $"Unexpected token: {c}"); break;
 			}	
+		}
+
+		private void slash()
+		{
+			if(match('/'))
+			{
+				Console.WriteLine("comment detected");
+				while(peek() != '\n' && !isAtEnd()){advance();}
+			}
+			else
+			{
+				addToken(TokenType.SLASH);
+			}	
+		}
+
+		private void stringLiteral()
+		{
+			// track length of a string so we can Substring it later
+			int stringLength = 0;
+
+			while(peek() != '"' && !isAtEnd())
+			{
+				if(peek() == '\n'){line = line + 1;}
+				stringLength = stringLength + 1;
+				advance();
+			}
+
+			if(isAtEnd())
+			{
+				Program.error(line, "non-terminating string");
+			}
+
+			//this is for the closing '"'
+			advance();
+
+			// trim the quotes form the value
+			string literal = source.Substring(start+1, stringLength);
+			addToken(TokenType.STRING, literal);
+			Console.WriteLine($"String Found: {literal}");
 		}
 
 		private bool match(char expected)
