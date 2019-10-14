@@ -77,6 +77,10 @@ namespace emlang
 			{
 				numberLiteral();
 			}
+			else if(isAlpha(c))
+			{
+				identifier();
+			}
 			else
 			{
 				Program.error(line, $"Unexpected token: {c}");
@@ -149,6 +153,12 @@ namespace emlang
 			Console.WriteLine($"number detected: {number}");
 		}
 
+		public void identifier(){
+			while(isAlphaNumeric(peek())){ advance(); }
+			
+			addToken(TokenType.IDENTIFIER);
+		}
+
 		private bool match(char expected)
 		{
 			if(isAtEnd()){return(false);}
@@ -167,6 +177,22 @@ namespace emlang
 			{
 				return(false);
 			}
+		}
+
+		private bool isAlpha(char c)
+		{
+			return
+			(
+				(c >= 'a' && c <= 'z') ||
+				(c >= 'A' && c <= 'Z') ||
+				(c == '_')
+			);
+			
+		}
+
+		private bool isAlphaNumeric(char c)
+		{
+			return(isAlpha(c) || isDigit(c));
 		}
 
 		private char advance()
