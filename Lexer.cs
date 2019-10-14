@@ -68,17 +68,19 @@ namespace emlang
 				case '\t': break;
 
 				// throw error on enexpected tokens
-				default: 
-					if(isDigit(c))
-					{
-						numberLiteral();
-					}
-					else
-					{
-						Program.error(line, $"Unexpected token: {c}"); break;
-					}
-					break;
+				default: defaultCase(c); break;
 			}	
+		}
+
+		private void defaultCase(char c){
+			if(isDigit(c))
+			{
+				numberLiteral();
+			}
+			else
+			{
+				Program.error(line, $"Unexpected token: {c}");
+			}
 		}
 
 		private void slash()
@@ -142,7 +144,7 @@ namespace emlang
 				}
 			}	
 
-			string number = source.Substring(start, numberLength);
+			double number = Double.Parse(source.Substring(start, numberLength));
 			addToken(TokenType.NUMBER, number);
 			Console.WriteLine($"number detected: {number}");
 		}
