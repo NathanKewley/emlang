@@ -68,7 +68,16 @@ namespace emlang
 				case '\t': break;
 
 				// throw error on enexpected tokens
-				default: Program.error(line, $"Unexpected token: {c}"); break;
+				default: 
+					if(isDigit(c))
+					{
+						numberLiteral();
+					}
+					else
+					{
+						Program.error(line, $"Unexpected token: {c}"); break;
+					}
+					break;
 			}	
 		}
 
@@ -111,6 +120,33 @@ namespace emlang
 			Console.WriteLine($"String Found: {literal}");
 		}
 
+		private void numberLiteral()
+		{
+			int numberLength = 1;
+
+			while(isDigit(peek()))
+			{
+				advance();
+				numberLength++;
+			}
+
+			if(peek() == '.' && isDigit(peekNext()))
+			{
+				advance();
+				numberLength++;
+
+				while(isDigit(peek()))
+				{
+					advance();
+					numberLength++;
+				}
+			}	
+
+			string number = source.Substring(start, numberLength);
+			addToken(TokenType.NUMBER, number);
+			Console.WriteLine($"number detected: {number}");
+		}
+
 		private bool match(char expected)
 		{
 			if(isAtEnd()){return(false);}
@@ -118,6 +154,17 @@ namespace emlang
 
 			current = current + 1;
 			return(true);
+		}
+
+		private bool isDigit(char c)
+		{
+			if(c >= '0' && c <= '9'){
+				return(true);
+			}
+			else
+			{
+				return(false);
+			}
 		}
 
 		private char advance()
@@ -142,6 +189,12 @@ namespace emlang
 		{
 			if(isAtEnd()){return '\0';}
 			return(source[current]);
+		}
+		
+		private char peekNext()
+		{
+			if((current + 1) >= source.Length){return('\0');}
+			return(source[current + 1]);
 		}
 	}
 }

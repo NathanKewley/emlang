@@ -55,8 +55,9 @@ namespace emlang
 
 			foreach(Token token in tokens)
 			{
-				Console.WriteLine(token);
+				// Console.WriteLine(token);
 			}
+			Console.WriteLine("code run....");
 		}
 
 		public static void error(int line, string message)
