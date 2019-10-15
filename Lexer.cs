@@ -10,10 +10,28 @@ namespace emlang
 		int start = 0;
 	    int current = 0; 
 		int line = 1;
+		
+		Dictionary<string, TokenType> ReservedWords = new Dictionary<string, TokenType>();
 
 		public Lexer(string code)
 		{
 			this.source = code;
+			ReservedWords.Add("and", TokenType.AND);
+			ReservedWords.Add("class", TokenType.CLASS);
+			ReservedWords.Add("else", TokenType.ELSE);
+			ReservedWords.Add("false", TokenType.FALSE);
+			ReservedWords.Add("for", TokenType.FOR);
+			ReservedWords.Add("fun", TokenType.FUN);
+			ReservedWords.Add("if", TokenType.IF);
+			ReservedWords.Add("nil", TokenType.NIL);
+			ReservedWords.Add("or", TokenType.OR);
+			ReservedWords.Add("print", TokenType.PRINT);
+			ReservedWords.Add("return", TokenType.RETURN);
+			ReservedWords.Add("super", TokenType.SUPER);
+			ReservedWords.Add("this", TokenType.THIS);
+			ReservedWords.Add("true", TokenType.TRUE);
+			ReservedWords.Add("var", TokenType.VAR);
+			ReservedWords.Add("while", TokenType.WHILE);
 		}
 
 		private bool isAtEnd()
@@ -154,9 +172,23 @@ namespace emlang
 		}
 
 		public void identifier(){
-			while(isAlphaNumeric(peek())){ advance(); }
+			int identifierLength = 1;
+			while(isAlphaNumeric(peek()))
+			{ 
+				identifierLength = identifierLength + 1;
+				advance(); 
+			}
 			
-			addToken(TokenType.IDENTIFIER);
+			string token = source.Substring(start, identifierLength);
+
+			if(ReservedWords.ContainsKey(token))
+			{
+				addToken(ReservedWords[token]);
+			}
+			else
+			{
+				addToken(TokenType.IDENTIFIER);
+			}
 		}
 
 		private bool match(char expected)
