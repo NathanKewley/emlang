@@ -1,0 +1,22 @@
+using System;
+
+namespace emlang
+{
+	public class Expr
+	{
+        {% for expression in expressions %}
+		static class {{ expression[0] }} : Expr 
+		{
+			{{ expression[0] }}(Expr LEFT, Token OPERATOR, Expr RIGHT) {
+				this.LEFT = LEFT;
+				this.OPERATOR = OPERATOR;
+				this.RIGHT = RIGHT;
+			}
+
+			static Expr LEFT;
+			static Token OPERATOR;
+			static Expr RIGHT;
+		}
+		{% endfor %}
+	}
+}
