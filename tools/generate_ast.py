@@ -1,5 +1,5 @@
 import os
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Template
 
 # define the ast properties
 expressions = [

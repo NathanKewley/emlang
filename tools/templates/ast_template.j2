@@ -7,15 +7,15 @@ namespace emlang
         {% for expression in expressions %}
 		static class {{ expression[0] }} : Expr 
 		{
-			{{ expression[0] }}(Expr LEFT, Token OPERATOR, Expr RIGHT) {
-				this.LEFT = LEFT;
-				this.OPERATOR = OPERATOR;
-				this.RIGHT = RIGHT;
+			{% for field in expression[1] %}
+			static {{ field }};
+			{% endfor %}
+						
+			{{ expression[0] }}({% for field in expression[1] %}{{ field }}{% if not loop.last %}, {% endif %}{% endfor %}) {
+				{% for field in expression[1] %}
+				this.{{ field.split(' ')[1] }} = {{ field.split(' ')[1] }};
+				{% endfor %}
 			}
-
-			static Expr LEFT;
-			static Token OPERATOR;
-			static Expr RIGHT;
 		}
 		{% endfor %}
 	}
