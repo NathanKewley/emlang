@@ -10,6 +10,26 @@ class Lexer():
         self.current = 0
         self.line = 1
 
+        # A dictionary of reserved identifiers
+        self.reserved_words = {
+            "and": TokenType.AND,
+            "class": TokenType.CLASS,
+            "else": TokenType.ELSE,
+            "false": TokenType.FALSE,
+            "for": TokenType.FOR,
+            "function": TokenType.FUNCTION,
+            "if": TokenType.IF,
+            "nil": TokenType.NIL,
+            "or": TokenType.OR,
+            "print": TokenType.PRINT,
+            "return": TokenType.RETURN,
+            "super": TokenType.SUPER,
+            "this": TokenType.THIS,
+            "true": TokenType.TRUE,
+            "var": TokenType.VAR,
+            "while": TokenType.WHILE
+        }
+
     def lex(self):
         # scan tokens until the end of the source file is reached
         while(not self.is_at_end()):
@@ -65,9 +85,12 @@ class Lexer():
         elif(char == '"'): self.string()
         elif(self.is_digit(char)): self.number()
 
+        # Now we need to identiy identifiers (lel). These will either start with an alphanumrical character or an underscore
+        elif(self.is_alpha_num(char)): self.identifier()
+
         # We have a few special character that we dont care about like spaces
         # and new lines (other than incrementing the line number)
-        elif(char == ' ' or char == '\r' or char == '\t'): print("ignored char")
+        elif(char == ' ' or char == '\r' or char == '\t'): pass
         elif(char == '\n'): 
             self.line = self.line + 1
             print(f"[{self.line}] new line detected")
@@ -127,6 +150,16 @@ class Lexer():
             return True
         return False
 
+    def is_alpha(self, char):
+        if(char >= 'a' and char <= 'z') or (char >= 'A' and char <= 'Z') or (char == '_'):
+            return True
+        return False
+
+    def is_alpha_num(self, char):
+        if(self.is_alpha(char)) or (self.is_digit(char)):
+            return True
+        return False
+
     def number(self):
         # check the next digit is a number
         while(self.is_digit(self.peek())): self.advance()
@@ -158,3 +191,14 @@ class Lexer():
 
         # strip the quoted from the string and add the token
         self.add_token_with_value(TokenType.STRING, self.source[self.start+1 : self.current-1])
+
+    def identifier(self):
+        while(self.is_alpha_num(self.peek())):
+            self.advance()
+        
+        token_text = self.source[self.start : self.current]
+        if(token_text in self.reserved_words.keys()):
+            self.add_token(self.reserved_words[token_text])    
+
+        else:
+            self.add_token(TokenType.IDENTIFIER)

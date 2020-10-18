@@ -10,7 +10,7 @@ class TokenType(Enum):
     DOT = 5
     MINUS = 6
     PLUS = 7
-    SELICOLON = 8
+    SEMICOLON = 8
     SLASH = 9
     STAR = 10
 

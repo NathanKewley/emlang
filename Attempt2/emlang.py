@@ -3,7 +3,6 @@ from lib.error import Error
 import sys
 
 # This is the main entry point to the program, this is essentailly a shell that calls our to the requited parts. 
-# The error handling code also lives here.
 
 class Emlang():
     hadError = False
