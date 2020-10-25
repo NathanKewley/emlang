@@ -15,9 +15,6 @@ class Emlang():
         # lex the source to get a list of tokens
         tokens = lexer.lex()
 
-        # for now just print out all the tokens
-        # print(tokens)
-
     # Read and execute a file
     def runFile(self, sourceFile):
         file = open(sourceFile,mode='r')
