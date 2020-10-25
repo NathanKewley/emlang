@@ -1,8 +1,16 @@
 class Expr():
+	def visitor(self, visitor):
+		{% for expression in expressions -%}	{% for field in expression[1] -%}
+		def visit{{ expression[0] }}Expr(self, expr):
+			pass
+		{% endfor -%}{% endfor -%}
+
 	{% for expression in expressions %}
 	class {{ expression[0] }}(Expr):
 		def __init__(self, {% for f in expression[1] %}{{ f }}{{ ", " if not loop.last }}{% endfor %}):
-			{% for field in expression[1] %}
-			this.{{ field }} = {{ field }}
+			{% for field in expression[1] -%}
+			self.{{ field }} = {{ field }}
 			{% endfor %}
-	{% endfor %}
+		def accept(self, visitor):
+			return visitor.visit{{ expression[0] }}Expr(self)
+	{% endfor -%}

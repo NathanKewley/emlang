@@ -2,7 +2,7 @@ import os
 from jinja2 import Environment, FileSystemLoader, Template
 
 # delete the ast
-ast_out_file = "ast.py"
+ast_out_file = "../lib/expr.py"
 try:
     os.remove(ast_out_file)
 except:
