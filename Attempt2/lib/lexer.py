@@ -192,13 +192,16 @@ class Lexer():
         # strip the quoted from the string and add the token
         self.add_token_with_value(TokenType.STRING, self.source[self.start+1 : self.current-1])
 
+    # we need to determine if the identifier is reserved or user defined and treat it as such
     def identifier(self):
         while(self.is_alpha_num(self.peek())):
             self.advance()
         
+        # Check if reserved word
         token_text = self.source[self.start : self.current]
         if(token_text in self.reserved_words.keys()):
             self.add_token(self.reserved_words[token_text])    
 
+        # else it is user defined
         else:
             self.add_token(TokenType.IDENTIFIER)

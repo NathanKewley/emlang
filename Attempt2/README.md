@@ -171,3 +171,32 @@ emlang will initially be dynamically typed. But the end goal will be to have it 
 ### Memory Management
 This will be done by the language... Think this is called `Garbage Collection`. I need to update this bit later when I understand it a bit better.
 
+### Grammar Rules
+**Terminal**: A letter from the Grammars alphabet, where the letters are the tokens output from the Lexer. This are the end point of the grammar as they are not expanded futhur.
+
+**NonTerminal**: This is a refference to another rule in the grammar that then need to also be defined.
+
+This will be based on the `Backus-Naur form` of notation, we have a couple of key symbols defined as below:
+```
+→    defines the produciton of a rule        <rule> → <production>
+;    End of a sequence                       <rule> → <production> ;
+|    Allows multiple producitons in a rule   <rule> → <production> | <produciton> ;
+( )  Allows options mid production           <rule> → (<production> | <produciton>) | <production> ;
+*    Repeat 0 or more times                  <rule> → <produciton> <production>* ;
++    Repeat 1 or more tiems                  <rule> → <production>+ ;
+?    Optional, can appear 0 or 1 times       <rule> → <production> (<production>)? ;
+```
+
+The grammar definition for emlang is as follows (Note: this only implmements a subset for now):
+```
+expression     → literal
+                 | unary
+                 | binary
+                 | grouping ;
+
+literal        → NUMBER | STRING | "true" | "false" | "nil" ;
+grouping       → "(" expression ")" ;
+unary          → ( "-" | "!" ) expression ;
+binary         → expression operator expression ;
+operator       → "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
+```
