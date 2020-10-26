@@ -187,8 +187,21 @@ This will be based on the `Backus-Naur form` of notation, we have a couple of ke
 ?    Optional, can appear 0 or 1 times       <rule> → <production> (<production>)? ;
 ```
 
-The grammar definition for emlang is as follows (Note: this only implmements a subset for now):
+Preccedence rules for the emlang grammar are important as they remove ambiguity where a string of tokens could be built into multiple syntax trees. Take for example:
+`1 + 3 * 6`. Without precedence this could become `(1 + 3) * 6` or `1 + (3 * 6)`. This becomes part of the emlang grammar definition. The precedence rules are as follows:
 ```
+1. Equality                                  == !=
+2. Comparison                                > < >= <=
+3. Term                                      + -
+4. Factor                                    / *
+5. Unary                                     ! -
+6. Primary                                   Number String "true" "false" "Null" "(" ")"
+```
+
+The grammar definition for emlang is as follows (Note: this only implmements a subset for now and will be expanded on):
+```
+__VERSION 1__ (NO PRECEDENCE)
+
 expression     → literal
                  | unary
                  | binary
@@ -199,4 +212,16 @@ grouping       → "(" expression ")" ;
 unary          → ( "-" | "!" ) expression ;
 binary         → expression operator expression ;
 operator       → "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
+```
+
+```
+__VERSION 2__ (WITH PRECEDENCE)
+
+expression     → equality
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term           → factor ( ( "-" | "+" ) factor )* ;
+factor         → unary ( ( "/" | "*" ) unary )* ;
+unary          → ( "!" | "-" ) unary | primary ;
+primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
 ```
