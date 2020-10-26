@@ -1,5 +1,7 @@
 from lib.lexer import Lexer
 from lib.error import Error
+from lib.parser import Parser
+from ast_printer import Ast_Printer
 import sys
 
 # This is the main entry point to the program, this is essentailly a shell that calls our to the requited parts. 
@@ -9,11 +11,18 @@ class Emlang():
 
     # This is the main source execution point
     def run(self, source):
-        # Create the lexer
+        # Create the lexer and generate tokens
         lexer = Lexer(source)
-
-        # lex the source to get a list of tokens
         tokens = lexer.lex()
+
+        # create the parser and parse the tokens
+        parser = Parser(tokens)
+        expression = parser.parse()
+
+        # if(hadError):
+        #     return
+        print(Ast_Printer().print_ast(expression)); 
+        
 
     # Read and execute a file
     def runFile(self, sourceFile):
