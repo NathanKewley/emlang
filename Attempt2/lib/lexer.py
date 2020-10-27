@@ -107,13 +107,11 @@ class Lexer():
     # add a token onto the list
     def add_token(self, token_type):
         token = Token(token_type, self.source[self.start:self.current], None, self.line)
-        print(f"adding {token.token_type}")
         self.tokens.append(token)
 
     # add a token onto the list that contains a value
     def add_token_with_value(self, token_type, value):
         token = Token(token_type, self.source[self.start:self.current], value, self.line)
-        print(f"adding {token.token_type} with value: {value}")
         self.tokens.append(token)        
 
     # check the next token for a match to find multiple character tokens

@@ -13,7 +13,6 @@ class Interpreter(Expr):
         try:
             value = self.evaluate(expression)
             print(value)
-            # print(self.stringify(value))
         except:
             Error.throw_generic("Unknown runtime error... shit")
 
@@ -51,7 +50,6 @@ class Interpreter(Expr):
             return(left * right)
         if(expr.operator.token_type == TokenType.PLUS):
             # we need the distinciton between string and number values here as we dont want to add nunbers and strings
-            print(f"PLUS FOUND: Left type: {left}  | right type: {right}")
             if((isinstance(left, numbers.Real)) and (isinstance(right, numbers.Real))):
                 return(left + right)
             if(left.type() == str) and (right.type() == str):
@@ -105,18 +103,3 @@ class Interpreter(Expr):
         if(not(isinstance(right, numbers.Real))):
             Error.throw_runtime_error(operator, "right operand must be a number")
         return True
-
-    # POSSIBLY NEED TO REVISIT AND IMPLEMENT
-    # private String stringify(Object object) { (https://craftinginterpreters.com/evaluating-expressions.html#hooking-up-the-interpreter)
-    #     if (object == null) return "nil";
-
-    #     if (object instanceof Double) {
-    #     String text = object.toString();
-    #     if (text.endsWith(".0")) {
-    #         text = text.substring(0, text.length() - 2);
-    #     }
-    #     return text;
-    #     }
-
-    #     return object.toString();
-    # }
