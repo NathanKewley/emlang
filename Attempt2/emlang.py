@@ -1,6 +1,7 @@
 from lib.lexer import Lexer
 from lib.error import Error
 from lib.parser import Parser
+from lib.interpreter import Interpreter
 from ast_printer import Ast_Printer
 import sys
 
@@ -23,6 +24,9 @@ class Emlang():
         #     return
         print(Ast_Printer().print_ast(expression)); 
         
+        # create the interpreter and interpret the expression
+        interpreter = Interpreter()
+        interpreter.interprert(expression)
 
     # Read and execute a file
     def runFile(self, sourceFile):

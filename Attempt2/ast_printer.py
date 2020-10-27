@@ -7,20 +7,20 @@ class Ast_Printer(Expr):
     def print_ast(self, expr):
         return expr.accept(self)
 
-    def visitBinaryExpr(self, expr):
+    def visit_binary_expr(self, expr):
         exprs = [expr.left, expr.right]
         return self.parenthesize(expr.operator.lexeme, exprs)
 
-    def visitGroupingExpr(self, expr):
+    def visit_grouping_expr(self, expr):
         exprs = [expr.expression]
         return self.parenthesize("group", exprs)
 
-    def visitLiteralExpr(self, expr):
+    def visit_literal_expr(self, expr):
         if (expr == None): 
             return "Null"
         return expr.value
 
-    def visitUnaryExpr(self, expr):
+    def visit_unary_expr(self, expr):
         exprs = [expr.right]
         return self.parenthesize(expr.operator.lexeme, exprs)
 

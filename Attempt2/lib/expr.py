@@ -1,12 +1,12 @@
 class Expr():
 	def visitor(self, visitor):
-		def visitBinaryExpr(self, expr):
+		def visit_binary_expr(self, expr):
 			pass
-		def visitGroupingExpr(self, expr):
+		def visit_grouping_expr(self, expr):
 			pass
-		def visitLiteralExpr(self, expr):
+		def visit_literal_expr(self, expr):
 			pass
-		def visitUnaryExpr(self, expr):
+		def visit_unary_expr(self, expr):
 			pass
 		
 class Binary(Expr):
@@ -16,21 +16,21 @@ class Binary(Expr):
 		self.right = right
 		
 	def accept(self, visitor):
-		return visitor.visitBinaryExpr(self)
+		return visitor.visit_binary_expr(self)
 
 class Grouping(Expr):
 	def __init__(self, expression):
 		self.expression = expression
 		
 	def accept(self, visitor):
-		return visitor.visitGroupingExpr(self)
+		return visitor.visit_grouping_expr(self)
 
 class Literal(Expr):
 	def __init__(self, value):
 		self.value = value
 		
 	def accept(self, visitor):
-		return visitor.visitLiteralExpr(self)
+		return visitor.visit_literal_expr(self)
 
 class Unary(Expr):
 	def __init__(self, operator, right):
@@ -38,4 +38,4 @@ class Unary(Expr):
 		self.right = right
 		
 	def accept(self, visitor):
-		return visitor.visitUnaryExpr(self)
+		return visitor.visit_unary_expr(self)

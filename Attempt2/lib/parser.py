@@ -126,7 +126,3 @@ class Parser():
             if(self.peek().token_type in [TokenType.CLASS, TokenType.FUN, TokenType.VAR, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.PRINT, TokenType.RETURN]):
                 return
             self.advance()
-
-# class ParseError():
-#     def __init__(self, tokens):
-#         pass
