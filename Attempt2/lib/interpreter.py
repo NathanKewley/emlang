@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary
-from lib.stmt import Stmt, Expression, Print
+from lib.stmt import Stmt, Expression, Print, Yeet
 from lib.error import Error
 import numbers
 
@@ -29,6 +29,12 @@ class Interpreter(Expr, Stmt):
     def visit_print_stmt(self, stmt):
         value = self.evaluate(stmt.expression)
         print(value)
+        return None
+
+    # evaluate yeet statement
+    def visit_yeet_stmt(self, stmt):
+        value = self.evaluate(stmt.expression)
+        print(value.upper())
         return None
 
     # evaluate Literal expressions

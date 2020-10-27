@@ -21,7 +21,8 @@ expressions = [
 # define the statements
 statements = [
     ["Expression", ["expression"]],
-    ["Print", ["expression"]]
+    ["Print", ["expression"]],
+    ["Yeet", ["expression"]]
 ]
 
 # load the Jinja2 templates

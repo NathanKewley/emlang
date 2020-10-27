@@ -47,3 +47,4 @@ class TokenType(Enum):
     VAR = 36
     WHILE = 37
     EOF = 38
+    YEET = 39

@@ -230,11 +230,11 @@ primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression "
 ___VERSION 3___ (WITH INITIAL STATEMENTS)
 program        → statement* EOF
 
-statement      → exprStmt
-               | printStmt ;
+statement      → exprStmt | printStmt ;
 
 exprStmt       → expression ";" ;
 printStmt      → "print" expression ";" ;
+yeetStmt       → "YEET" expression ";" ;
 
 expression     → equality
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;

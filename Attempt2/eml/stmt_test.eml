@@ -7,3 +7,4 @@ print 5 > 6;
 print 3 <= 3;
 // do nothing with me
 print "did that work";
+YEET "this should be all in caps lel" + " will it join the string?";

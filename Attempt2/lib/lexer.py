@@ -22,6 +22,7 @@ class Lexer():
             "nil": TokenType.NIL,
             "or": TokenType.OR,
             "print": TokenType.PRINT,
+            "YEET": TokenType.YEET,
             "return": TokenType.RETURN,
             "super": TokenType.SUPER,
             "this": TokenType.THIS,
@@ -188,7 +189,7 @@ class Lexer():
         self.advance()
 
         # strip the quoted from the string and add the token
-        self.add_token_with_value(TokenType.STRING, self.source[self.start+1 : self.current-1])
+        self.add_token_with_value(TokenType.STRING, self.source[self.start+1 : self.current-1])      
 
     # we need to determine if the identifier is reserved or user defined and treat it as such
     def identifier(self):

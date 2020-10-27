@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary
-from lib.stmt import Stmt, Expression, Print
+from lib.stmt import Stmt, Expression, Print, Yeet
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -21,6 +21,8 @@ class Parser():
     def statement(self):
         if(self.match([TokenType.PRINT])):
             return self.print_statement()
+        if(self.match([TokenType.YEET])):
+            return self.yeet_statement()
         return self.expression_statement()
 
     # exprStmt       → expression ";" ;
@@ -34,6 +36,12 @@ class Parser():
         value = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
         return Print(value)
+
+    # yeetStmt       → "YEET" expression ";" ;     
+    def yeet_statement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
+        return Yeet(value)
 
     # expression     → equality
     def expression(self):
@@ -134,7 +142,6 @@ class Parser():
             return self.advance()
         token = self.peek()
         Error.throw_token_error(token, error)
-        # return ParseError()
         return None
 
     def synchronize(self):
@@ -142,6 +149,6 @@ class Parser():
         while not self.is_at_end():
             if(self.previous().token_type == TokenType.SEMICOLON):
                 return
-            if(self.peek().token_type in [TokenType.CLASS, TokenType.FUN, TokenType.VAR, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.PRINT, TokenType.RETURN]):
+            if(self.peek().token_type in [TokenType.CLASS, TokenType.FUN, TokenType.VAR, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.PRINT, TokenType.RETURN, TokenType.YEET]):
                 return
             self.advance()
