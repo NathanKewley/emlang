@@ -1,6 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary
+from lib.stmt import Stmt, Expression, Print
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -10,11 +11,29 @@ class Parser():
         self.tokens = tokens
 
     def parse(self):
-        try:
-            return self.expression()
-        except:
-            Error.throw_generic("there was an error")
-            return None
+        statements = []
+        while(not (self.is_at_end())):
+            print("adding statement")
+            statements.append(self.statement())
+        return(statements)
+
+    # statement      → exprStmt | printStmt ;
+    def statement(self):
+        if(self.match([TokenType.PRINT])):
+            return self.print_statement()
+        return self.expression_statement()
+
+    # exprStmt       → expression ";" ;
+    def expression_statement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
+        return Stmt.Expression(expr)
+
+    # printStmt      → "print" expression ";" ;
+    def print_statement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
+        return Print(value)
 
     # expression     → equality
     def expression(self):

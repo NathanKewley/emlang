@@ -1,20 +1,35 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary
+from lib.stmt import Stmt, Expression, Print
 from lib.error import Error
 import numbers
 
 # The interpreter takes an expression and evaluates it
-class Interpreter(Expr):
+class Interpreter(Expr, Stmt):
     def __init__(self):
         pass
 
-    def interprert(self, expression):
+    def interprert(self, statements):
         try:
-            value = self.evaluate(expression)
-            print(value)
+            for statement in statements:
+                self.execute(statement)
         except:
             Error.throw_generic("Unknown runtime error... shit")
+
+    def execute(self, statement):
+        statement.accept(self)
+
+    # evaluate expression statement
+    def visit_expresstion_stmt(self, stmt):
+        self.evaluate(stmt.expression)
+        return None
+
+    # evaluate print statement
+    def visit_print_stmt(self, stmt):
+        value = self.evaluate(stmt.expression)
+        print(value)
+        return None
 
     # evaluate Literal expressions
     def visit_literal_expr(self, expr):
@@ -52,7 +67,7 @@ class Interpreter(Expr):
             # we need the distinciton between string and number values here as we dont want to add nunbers and strings
             if((isinstance(left, numbers.Real)) and (isinstance(right, numbers.Real))):
                 return(left + right)
-            if(left.type() == str) and (right.type() == str):
+            if(isinstance(left, str)) and (isinstance(right, str)):
                 return(left + right)
             Error.throw_runtime_error(expr.operator, "operands must be either 2 number or 2 strings")
         if(expr.operator.token_type == TokenType.GREATER):

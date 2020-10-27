@@ -13,20 +13,27 @@ class Emlang():
     # This is the main source execution point
     def run(self, source):
         # Create the lexer and generate tokens
+        print("""-------------------------
+    GENERATING TOKENS
+-------------------------""")
         lexer = Lexer(source)
         tokens = lexer.lex()
 
         # create the parser and parse the tokens
+        print("""
+-------------------------
+      PARSING TOKENS
+-------------------------""")        
         parser = Parser(tokens)
-        expression = parser.parse()
-
-        # if(hadError):
-        #     return
-        print(Ast_Printer().print_ast(expression)); 
+        statements = parser.parse()
         
         # create the interpreter and interpret the expression
+        print("""
+-------------------------
+    INTERPRETING STATEMENTS
+-------------------------""")
         interpreter = Interpreter()
-        interpreter.interprert(expression)
+        interpreter.interprert(statements)
 
     # Read and execute a file
     def runFile(self, sourceFile):
