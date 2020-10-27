@@ -1,14 +1,16 @@
 import os
 from jinja2 import Environment, FileSystemLoader, Template
 
-# delete the ast
-ast_out_file = "../lib/expr.py"
+expr_out_file = "../lib/expr.py"
+stmt_out_file = "../lib/stmt.py"
+
 try:
-    os.remove(ast_out_file)
+    os.remove(expr_out_file)
+    os.remove(stmt_out_file)
 except:
     pass
 
-# define the ast properties
+# define the expressions
 expressions = [
     ["Binary", ["left", "operator", "right"]],
     ["Grouping", ["expression"]],
@@ -16,14 +18,24 @@ expressions = [
     ["Unary", ["operator", "right"]]
 ]
 
-# load the Jinja2 template
+# define the statements
+statements = [
+    ["Expression", ["expression"]],
+    ["Print", ["expression"]]
+]
+
+# load the Jinja2 templates
 file_loader = FileSystemLoader('templates')
 env = Environment(loader=file_loader)
-ast_template = env.get_template('ast_template.j2')
+expr_template = env.get_template('expr_template.j2')
+stmt_template = env.get_template('stmt_template.j2')
 
-# render the template
-ast_content = ast_template.render(expressions=expressions)
+# render expr template
+expr_content = expr_template.render(expressions=expressions)
+with open(expr_out_file, 'a') as out:
+    out.write(expr_content + '\n')
 
-# write ast out to a file
-with open(ast_out_file, 'a') as out:
-    out.write(ast_content + '\n')
+# render stmt template
+stmt_content = stmt_template.render(expressions=statements)
+with open(stmt_out_file, 'a') as out:
+    out.write(stmt_content + '\n')
