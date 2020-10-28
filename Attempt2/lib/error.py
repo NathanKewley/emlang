@@ -6,6 +6,7 @@ class Error():
         pass
 
     def throw_generic(self, message):
+        sys.tracebacklimit = 0
         raise Exception(message)
 
     def throw_token_error(self, token, message):

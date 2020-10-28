@@ -11,4 +11,4 @@ class Environment():
     def get(self, name):
         if(name in self.values):
             return self.values[name]
-        Error.throw_generic(f"Undefined Variabe: {name}.")
+        Error.throw_generic(self, f"Undefined Variabe: {name}.")
