@@ -35,7 +35,7 @@ class Interpreter(Expr, Stmt):
     # evaluate var statement
     def visit_var_stmt(self, stmt):
         value = None
-        if(hasattr(stmt, 'expression')):
+        if(not(stmt.expression) == None):
             value = self.evaluate(stmt.expression)
         self.environment.define(stmt.name, value)
         return None
