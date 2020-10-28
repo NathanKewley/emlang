@@ -1,6 +1,10 @@
 from lib.token import Token
+import sys
 
 class Error():
+    def __init__(self):
+        pass
+
     def throw_generic(self, message):
         raise Exception(message)
 
@@ -11,4 +15,5 @@ class Error():
         print(f"[Line {line}] ERROR {where}: {message}")
 
     def throw_runtime_error(self, operator, message):
-        raise Exception(f"[RUNTUME ERROR] [Line {operator.line}] {operator.type}, message")
+        sys.tracebacklimit = 0
+        raise Exception(f"[RUNTUME ERROR] [Line {operator.line}] {operator.token_type}, {message}")

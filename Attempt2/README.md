@@ -244,3 +244,26 @@ factor         → unary ( ( "/" | "*" ) unary )* ;
 unary          → ( "!" | "-" ) unary | primary ;
 primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
 ```
+
+```
+___VERSION 4___ (WITH DECLERATIONS FOR VARIABLES)
+program        → declaration* EOF
+
+declaration    → varDecl | statement ;
+
+statement      → exprStmt | printStmt ;
+
+varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+
+exprStmt       → expression ";" ;
+printStmt      → "print" expression ";" ;
+yeetStmt       → "YEET" expression ";" ;
+
+expression     → equality
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term           → factor ( ( "-" | "+" ) factor )* ;
+factor         → unary ( ( "/" | "*" ) unary )* ;
+unary          → ( "!" | "-" ) unary | primary ;
+primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;
+```

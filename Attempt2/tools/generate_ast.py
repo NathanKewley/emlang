@@ -15,13 +15,15 @@ expressions = [
     ["Binary", ["left", "operator", "right"]],
     ["Grouping", ["expression"]],
     ["Literal", ["value"]],
-    ["Unary", ["operator", "right"]]
+    ["Unary", ["operator", "right"]],
+    ["Variable", ["name"]]
 ]
 
 # define the statements
 statements = [
     ["Expression", ["expression"]],
     ["Print", ["expression"]],
+    ["Var", ["name", "expression"]],
     ["Yeet", ["expression"]]
 ]
 

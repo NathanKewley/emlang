@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary
-from lib.stmt import Stmt, Expression, Print, Yeet
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable
+from lib.stmt import Stmt, Expression, Print, Var, Yeet
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -13,18 +13,37 @@ class Parser():
     def parse(self):
         statements = []
         while(not (self.is_at_end())):
-            print("adding statement")
-            statements.append(self.statement())
+            print(f"adding statement {self.peek().token_type}")
+            statements.append(self.declaration())
         return(statements)
+
+    # declaration    → varDecl | statement ;
+    def declaration(self):
+        try:
+            if(self.match([TokenType.VAR])):
+                return self.var_declaration()
+            return self.statement()
+        except:
+            self.synchronize()
+            return None
 
     # statement      → exprStmt | printStmt ;
     def statement(self):
         if(self.match([TokenType.PRINT])):
             return self.print_statement()
         if(self.match([TokenType.YEET])):
-            return self.yeet_statement()
+            return self.yeet_statement()  
         return self.expression_statement()
 
+    # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+    def var_declaration(self):
+        name = self.consume(TokenType.IDENTIFIER, "Expected Variable Name")
+        expression = None
+        if(self.match([TokenType.EQUAL])):
+            expression = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
+        return Var(name.lexeme, expression)
+        
     # exprStmt       → expression ";" ;
     def expression_statement(self):
         expr = self.expression()
@@ -109,6 +128,8 @@ class Parser():
             expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Except ')' after expression.")
             return Grouping(expr)
+        if(self.match([TokenType.IDENTIFIER])):
+            return Variable(self.previous())
         Error.throw_token_error(self.peek(), "Expect Expression")
 
     def match(self, token_types):
@@ -149,6 +170,6 @@ class Parser():
         while not self.is_at_end():
             if(self.previous().token_type == TokenType.SEMICOLON):
                 return
-            if(self.peek().token_type in [TokenType.CLASS, TokenType.FUN, TokenType.VAR, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.PRINT, TokenType.RETURN, TokenType.YEET]):
+            if(self.peek().token_type in [TokenType.CLASS, TokenType.FUNCTION, TokenType.VAR, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.PRINT, TokenType.RETURN, TokenType.YEET]):
                 return
             self.advance()

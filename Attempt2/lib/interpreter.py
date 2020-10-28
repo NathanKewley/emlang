@@ -1,21 +1,22 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary
-from lib.stmt import Stmt, Expression, Print, Yeet
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable
+from lib.stmt import Stmt, Expression, Print, Var, Yeet
 from lib.error import Error
+from lib.environment import Environment
 import numbers
 
 # The interpreter takes an expression and evaluates it
 class Interpreter(Expr, Stmt):
     def __init__(self):
-        pass
+        self.environment = Environment()
 
     def interprert(self, statements):
-        try:
-            for statement in statements:
-                self.execute(statement)
-        except:
-            Error.throw_generic("Unknown runtime error... shit")
+        # try:
+        for statement in statements:
+            self.execute(statement)
+        # except:
+        #     Error.throw_generic(self, "Unknown runtime error... shit")
 
     def execute(self, statement):
         statement.accept(self)
@@ -31,11 +32,23 @@ class Interpreter(Expr, Stmt):
         print(value)
         return None
 
+    # evaluate var statement
+    def visit_var_stmt(self, stmt):
+        value = None
+        if(hasattr(stmt, 'expression')):
+            value = self.evaluate(stmt.expression)
+        self.environment.define(stmt.name, value)
+        return None
+
     # evaluate yeet statement
     def visit_yeet_stmt(self, stmt):
         value = self.evaluate(stmt.expression)
         print(value.upper())
         return None
+
+    # evaluate variable expression
+    def visit_variable_expr(self, expr):
+        return self.environment.get(expr.name.lexeme)
 
     # evaluate Literal expressions
     def visit_literal_expr(self, expr):
@@ -75,7 +88,7 @@ class Interpreter(Expr, Stmt):
                 return(left + right)
             if(isinstance(left, str)) and (isinstance(right, str)):
                 return(left + right)
-            Error.throw_runtime_error(expr.operator, "operands must be either 2 number or 2 strings")
+            Error.throw_runtime_error(self, expr.operator, "operands must be either 2 number or 2 strings")
         if(expr.operator.token_type == TokenType.GREATER):
             self.check_number_operands(expr.operator, left, right)
             return(left > right)

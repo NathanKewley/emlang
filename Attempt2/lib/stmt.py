@@ -4,6 +4,8 @@ class Stmt():
 			pass
 		def visit_print_stmt(self, expr):
 			pass
+		def visit_var_stmt(self, expr):
+			pass
 		def visit_yeet_stmt(self, expr):
 			pass
 		
@@ -21,9 +23,18 @@ class Print(Stmt):
     def accept(self, visitor):
         return visitor.visit_print_stmt(self)
 
+class Var(Stmt):
+    def __init__(self, name, expression):
+        self.name = name
+        self.expression = expression
+        
+    def accept(self, visitor):
+        return visitor.visit_var_stmt(self)
+
 class Yeet(Stmt):
     def __init__(self, expression):
         self.expression = expression
         
     def accept(self, visitor):
         return visitor.visit_yeet_stmt(self)
+

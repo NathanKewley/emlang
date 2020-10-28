@@ -1,0 +1,12 @@
+var what = 1;
+var the = 15 + 49;
+var hello = "hello ";
+var world = "world";
+var hw = "hello" + "_world";
+print what;
+print what + the;
+print what + (the / what) + the;
+print hello;
+print hello + world;
+print hw;
+YEET hw;
