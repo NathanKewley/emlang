@@ -7,7 +7,10 @@ class Environment():
         self.enclosing = enclosing
 
     def define(self, name, value):
-        self.values[name] = value
+        if(not(name in self.values)):
+            self.values[name] = value
+        else:
+            Error.throw_generic(self, f"Variable '{name}' already defined")
 
     def get(self, name):
         if(name in self.values):
