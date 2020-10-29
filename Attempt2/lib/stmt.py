@@ -8,6 +8,8 @@ class Stmt():
 			pass
 		def visit_yeet_stmt(self, expr):
 			pass
+		def visit_block_stmt(self, expr):
+			pass
 		
 class Expression(Stmt):
     def __init__(self, expression):
@@ -37,4 +39,11 @@ class Yeet(Stmt):
         
     def accept(self, visitor):
         return visitor.visit_yeet_stmt(self)
+
+class Block(Stmt):
+    def __init__(self, statements):
+        self.statements = statements
+        
+    def accept(self, visitor):
+        return visitor.visit_block_stmt(self)
 

@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
-from lib.stmt import Stmt, Expression, Print, Var, Yeet
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block
 from lib.error import Error
 from lib.environment import Environment
 import numbers
@@ -14,13 +14,29 @@ class Interpreter(Expr, Stmt):
     def interprert(self, statements):
         # try:
         for statement in statements:
-            print(statement.expression)
+            # print(statement.expression)
             self.execute(statement)
         # except:
         #     Error.throw_generic(self, "Unknown runtime error... shit")
 
     def execute(self, statement):
         statement.accept(self)
+
+    # evaluate blocks { }
+    def execute_block(self, statements, environment):
+        previous = self.environment
+        try:
+            self.environment = environment
+
+            for statement in statements:
+                self.execute(statement)
+        finally:
+            self.environment = previous
+
+    # visit block statement
+    def visit_block_stmt(self, stmt):
+        self.execute_block(stmt.statements, Environment(self.environment))
+        return None
 
     # evaluate expression statement
     def visit_expression_stmt(self, stmt):

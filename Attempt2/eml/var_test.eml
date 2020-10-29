@@ -1,3 +1,5 @@
-var what = 34;
-what = 5;
-print what + 5;
+var a = 1;
+{
+  var a = a + 2;
+  print a;
+}

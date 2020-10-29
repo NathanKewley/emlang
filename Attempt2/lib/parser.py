@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
-from lib.stmt import Stmt, Expression, Print, Var, Yeet
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -32,7 +32,9 @@ class Parser():
         if(self.match([TokenType.PRINT])):
             return self.print_statement()
         if(self.match([TokenType.YEET])):
-            return self.yeet_statement()               
+            return self.yeet_statement() 
+        if(self.match([TokenType.LEFT_BRACE])):
+            return Block(self.block())                           
         return self.expression_statement()
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
@@ -61,6 +63,17 @@ class Parser():
         value = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
         return Yeet(value)
+
+    # block          → "{" declaration* "}" ;
+    def block(self):
+        statements = []
+        print(f"building block statement")
+        while(not(self.check(TokenType.RIGHT_BRACE)) and (not(self.is_at_end()))):
+            print("appending statement")
+            statements.append(self.declaration())
+        self.consume(TokenType.RIGHT_BRACE, "Expect closing '}'")
+        print(f"statements for block {statements}")
+        return statements
 
     # eexpression     → assignment ;
     def expression(self):

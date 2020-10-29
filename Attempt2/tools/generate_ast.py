@@ -25,7 +25,8 @@ statements = [
     ["Expression", ["expression"]],
     ["Print", ["expression"]],
     ["Var", ["name", "expression"]],
-    ["Yeet", ["expression"]]
+    ["Yeet", ["expression"]],
+    ["Block", ["statements"]]
 ]
 
 # load the Jinja2 templates
