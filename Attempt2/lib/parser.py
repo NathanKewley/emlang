@@ -1,6 +1,6 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
 from lib.stmt import Stmt, Expression, Print, Var, Yeet
 from lib.error import Error
 
@@ -21,7 +21,7 @@ class Parser():
     def declaration(self):
         try:
             if(self.match([TokenType.VAR])):
-                return self.var_declaration()
+                return self.var_declaration()  
             return self.statement()
         except:
             self.synchronize()
@@ -32,7 +32,7 @@ class Parser():
         if(self.match([TokenType.PRINT])):
             return self.print_statement()
         if(self.match([TokenType.YEET])):
-            return self.yeet_statement()  
+            return self.yeet_statement()               
         return self.expression_statement()
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
@@ -48,7 +48,7 @@ class Parser():
     def expression_statement(self):
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
-        return Stmt.Expression(expr)
+        return Expression(expr)
 
     # printStmt      → "print" expression ";" ;
     def print_statement(self):
@@ -62,9 +62,21 @@ class Parser():
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
         return Yeet(value)
 
-    # expression     → equality
+    # eexpression     → assignment ;
     def expression(self):
-        return self.equality()
+        return self.assignment()
+
+    # assignment     → IDENTIFIER "=" assignment | equality ;
+    def assignment(self):
+        expr = self.equality()
+        if(self.match([TokenType.EQUAL])):
+            equals = self.previous()
+            value = self.assignment()
+            if(isinstance(expr, Variable)):
+                name = expr.name
+                return Assign(name, value)            
+            Error.throw_token_error(self.peek(), "Invalid assignment target for variable")
+        return expr     
 
     # equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     def equality(self):

@@ -16,7 +16,8 @@ expressions = [
     ["Grouping", ["expression"]],
     ["Literal", ["value"]],
     ["Unary", ["operator", "right"]],
-    ["Variable", ["name"]]
+    ["Variable", ["name"]],
+    ["Assign", ["name", "value"]]
 ]
 
 # define the statements

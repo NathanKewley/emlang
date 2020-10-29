@@ -10,6 +10,8 @@ class Expr():
 			pass
 		def visit_variable_expr(self, expr):
 			pass
+		def visit_assign_expr(self, expr):
+			pass
 		
 class Binary(Expr):
 	def __init__(self, left, operator, right):
@@ -48,4 +50,12 @@ class Variable(Expr):
 		
 	def accept(self, visitor):
 		return visitor.visit_variable_expr(self)
+
+class Assign(Expr):
+	def __init__(self, name, value):
+		self.name = name
+		self.value = value
+		
+	def accept(self, visitor):
+		return visitor.visit_assign_expr(self)
 

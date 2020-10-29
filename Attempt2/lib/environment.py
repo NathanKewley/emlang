@@ -12,3 +12,9 @@ class Environment():
         if(name in self.values):
             return self.values[name]
         Error.throw_generic(self, f"Undefined Variabe: {name}.")
+
+    def assign(self, name, value):
+        if(name in self.values):
+            self.values[name] = value
+            return None
+        Error.throw_generic(self, f"Variable '{name}' not defined")

@@ -1,13 +1,3 @@
-var what = 1;
-var the = 15 + 49;
-var hello = "hello ";
-var world = "world";
-var hw = "hello" + "_world";
-var test;
-print what;
-print what + the;
-print what + (the / what) + the;
-print hello;
-print hello + world;
-print hw;
-YEET hw;
+var what = 34;
+what = 5;
+print what + 5;

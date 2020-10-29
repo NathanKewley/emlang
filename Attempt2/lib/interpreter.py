@@ -1,6 +1,6 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
 from lib.stmt import Stmt, Expression, Print, Var, Yeet
 from lib.error import Error
 from lib.environment import Environment
@@ -14,6 +14,7 @@ class Interpreter(Expr, Stmt):
     def interprert(self, statements):
         # try:
         for statement in statements:
+            print(statement.expression)
             self.execute(statement)
         # except:
         #     Error.throw_generic(self, "Unknown runtime error... shit")
@@ -22,7 +23,7 @@ class Interpreter(Expr, Stmt):
         statement.accept(self)
 
     # evaluate expression statement
-    def visit_expresstion_stmt(self, stmt):
+    def visit_expression_stmt(self, stmt):
         self.evaluate(stmt.expression)
         return None
 
@@ -39,6 +40,12 @@ class Interpreter(Expr, Stmt):
             value = self.evaluate(stmt.expression)
         self.environment.define(stmt.name, value)
         return None
+
+    # variable assignment statement
+    def visit_assign_expr(self, expr):
+        value = self.evaluate(expr.value)
+        self.environment.assign(expr.name.lexeme, value)
+        return value
 
     # evaluate yeet statement
     def visit_yeet_stmt(self, stmt):

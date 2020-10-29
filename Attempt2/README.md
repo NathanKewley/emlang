@@ -246,7 +246,7 @@ primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression "
 ```
 
 ```
-___VERSION 4___ (WITH DECLERATIONS FOR VARIABLES)
+___VERSION 4___ (WITH DECLERATIONS FOR VARIABLES AND ASSIGNMENT)
 program        → declaration* EOF
 
 declaration    → varDecl | statement ;
@@ -259,7 +259,8 @@ exprStmt       → expression ";" ;
 printStmt      → "print" expression ";" ;
 yeetStmt       → "YEET" expression ";" ;
 
-expression     → equality
+expression     → assignment ;
+assignment     → IDENTIFIER "=" assignment | equality ;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
