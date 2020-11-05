@@ -17,7 +17,8 @@ expressions = [
     ["Literal", ["value"]],
     ["Unary", ["operator", "right"]],
     ["Variable", ["name"]],
-    ["Assign", ["name", "value"]]
+    ["Assign", ["name", "value"]],
+    ["Logical", ["left", "operator", "right"]]
 ]
 
 # define the statements
@@ -26,7 +27,8 @@ statements = [
     ["Print", ["expression"]],
     ["Var", ["name", "expression"]],
     ["Yeet", ["expression"]],
-    ["Block", ["statements"]]
+    ["Block", ["statements"]],
+    ["If", ["condition", "then_branch", "else_branch"]]
 ]
 
 # load the Jinja2 templates

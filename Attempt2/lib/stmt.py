@@ -10,6 +10,8 @@ class Stmt():
 			pass
 		def visit_block_stmt(self, expr):
 			pass
+		def visit_if_stmt(self, expr):
+			pass
 		
 class Expression(Stmt):
     def __init__(self, expression):
@@ -46,4 +48,13 @@ class Block(Stmt):
         
     def accept(self, visitor):
         return visitor.visit_block_stmt(self)
+
+class If(Stmt):
+    def __init__(self, condition, then_branch, else_branch):
+        self.condition = condition
+        self.then_branch = then_branch
+        self.else_branch = else_branch
+        
+    def accept(self, visitor):
+        return visitor.visit_if_stmt(self)
 

@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If
 from lib.error import Error
 from lib.environment import Environment
 import numbers
@@ -15,6 +15,7 @@ class Interpreter(Expr, Stmt):
         # try:
         for statement in statements:
             # print(statement.expression)
+            # print(statement)
             self.execute(statement)
         # except:
         #     Error.throw_generic(self, "Unknown runtime error... shit")
@@ -32,6 +33,14 @@ class Interpreter(Expr, Stmt):
                 self.execute(statement)
         finally:
             self.environment = previous
+
+    # visit if statement
+    def visit_if_stmt(self, stmt):
+        if(self.is_truthful(self.evaluate(stmt.condition))):
+            self.execute(stmt.then_branch)
+        elif(not(stmt.else_branch == None)):
+            self.execute(stmt.else_branch)
+        return None
 
     # visit block statement
     def visit_block_stmt(self, stmt):
@@ -68,6 +77,17 @@ class Interpreter(Expr, Stmt):
         value = self.evaluate(stmt.expression)
         print(value.upper())
         return None
+
+    # evaluate logic expression
+    def visit_logical_expr(self, expr):
+        left = self.evaluate(expr.left)
+        if(expr.operator.token_type == TokenType.OR):
+            if(self.is_truthful(left)): 
+                return left
+        else:
+            if(not(self.is_truthful(left))):
+                return left
+        return self.evaluate(expr.right)
 
     # evaluate variable expression
     def visit_variable_expr(self, expr):
@@ -137,13 +157,13 @@ class Interpreter(Expr, Stmt):
     def is_truthful(self, value):
         if(value == None):
             return False
-        if(value.type() is bool):
+        if(isinstance(value, bool)):
             return value
         return True
 
     def is_equal(self, left, right):
         # if types are different they are false
-        if(not(left.type() == right.type())):
+        if(not(type(left) == type(right))):
             return False
         return(left == right)
 

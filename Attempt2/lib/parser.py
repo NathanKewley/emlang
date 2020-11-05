@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -14,18 +14,20 @@ class Parser():
         statements = []
         while(not (self.is_at_end())):
             print(f"adding statement {self.peek().token_type}")
-            statements.append(self.declaration())
+            decl = self.declaration()
+            # print(decl)
+            statements.append(decl)
         return(statements)
 
     # declaration    → varDecl | statement ;
     def declaration(self):
-        try:
-            if(self.match([TokenType.VAR])):
-                return self.var_declaration()  
-            return self.statement()
-        except:
-            self.synchronize()
-            return None
+        # try:
+        if(self.match([TokenType.VAR])):
+            return self.var_declaration()  
+        return self.statement()
+        # except:
+        #     self.synchronize()
+        #     return None
 
     # statement      → exprStmt | printStmt ;
     def statement(self):
@@ -34,11 +36,14 @@ class Parser():
         if(self.match([TokenType.YEET])):
             return self.yeet_statement() 
         if(self.match([TokenType.LEFT_BRACE])):
-            return Block(self.block())                           
+            return Block(self.block())  
+        if(self.match([TokenType.IF])):
+            return self.if_statement()                                       
         return self.expression_statement()
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
     def var_declaration(self):
+        # print("adding var")
         name = self.consume(TokenType.IDENTIFIER, "Expected Variable Name")
         expression = None
         if(self.match([TokenType.EQUAL])):
@@ -64,6 +69,18 @@ class Parser():
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
         return Yeet(value)
 
+    # ifStmt         → "if" "(" expression ")" statement ( "else" statement )? 
+    def if_statement(self):
+        print("adding 'if' statement")
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if' statement")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' after 'if' statement")
+        then_branch = self.statement()
+        else_branch = None
+        if(self.match([TokenType.ELSE])):
+            else_branch = self.statement()
+        return If(condition, then_branch, else_branch)
+
     # block          → "{" declaration* "}" ;
     def block(self):
         statements = []
@@ -81,7 +98,7 @@ class Parser():
 
     # assignment     → IDENTIFIER "=" assignment | equality ;
     def assignment(self):
-        expr = self.equality()
+        expr = self.logic_or()
         if(self.match([TokenType.EQUAL])):
             equals = self.previous()
             value = self.assignment()
@@ -91,8 +108,29 @@ class Parser():
             Error.throw_token_error(self.peek(), "Invalid assignment target for variable")
         return expr     
 
+    # logic_or       → logic_and ( "or" logic_and )* ;
+    def logic_or(self):
+        # print("in logic or")
+        expr = self.logic_and()
+        while(self.match([TokenType.OR])):
+            operator = self.previous()
+            right = self.logic_and()
+            expr = Logical(expr, operator, right)
+        return expr
+
+    # logic_and      → equality ( "and" equality )* ;
+    def logic_and(self):
+        # print("in logic and")
+        expr = self.equality()
+        while(self.match([TokenType.AND])):
+            operator = self.previous()
+            right = self.equality()
+            expr = Logical(expr, operator, right)
+        return expr
+
     # equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     def equality(self):
+        # print("in equality")
         expr = self.comparison()
 
         while(self.match([TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL])):
