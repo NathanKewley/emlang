@@ -41,6 +41,7 @@ class Lexer():
         # token = Token(TokenType.EOF, "", None, self.line)
         # self.tokens.append(token)
         self.add_token(TokenType.EOF)
+        print(f"{len(self.tokens)}: tokens")
         return(self.tokens)
 
     # scans a single token and returns it
