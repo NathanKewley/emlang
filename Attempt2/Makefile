@@ -1,6 +1,7 @@
 .PHONY: test
 test:
-	pytest -q tests/test_lexer.py --import-mode=prepend
+	@echo "--------------------RUNNING TESTS--------------------"
+	pytest -q tests/test_lexer.py
 
 .PHONY: generate-ast
 generate-ast:
