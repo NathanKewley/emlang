@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -38,7 +38,11 @@ class Parser():
         if(self.match([TokenType.LEFT_BRACE])):
             return Block(self.block())  
         if(self.match([TokenType.IF])):
-            return self.if_statement()                                       
+            return self.if_statement()       
+        if(self.match([TokenType.WHILE])):
+            return self.while_statement()   
+        if(self.match([TokenType.FOR])):
+            return self.for_statement()                                                               
         return self.expression_statement()
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
@@ -69,12 +73,52 @@ class Parser():
         self.consume(TokenType.SEMICOLON, "Expect ';' to terminate statement.")
         return Yeet(value)
 
+    # whileStmt     → "while" "(" expression ")" statement
+    def while_statement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'while' statement")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for 'while' statement")
+        body = self.statement()
+        return While(condition, body)
+
+    # forStmt        → "for" "(" (varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement
+    def for_statement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'for' statement")
+        initializer = None
+        increment = None
+        condition = None
+
+        if(self.match([TokenType.SEMICOLON])):
+            initializer = None
+        elif(self.match([TokenType.VAR])):
+            initializer = self.var_declaration()
+        else:
+            initializer = self.expression_statement()
+
+        if(not(self.check(TokenType.SEMICOLON))):
+            condition = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after 'for' condition")
+
+        if(not(self.check(TokenType.RIGHT_PAREN))):
+            increment = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for 'for' statement")
+
+        body = self.statement()
+        if(not(increment == None)):
+            body = Block([body, Expression(increment)])
+        if(condition == None):
+            condition = Literal(True)
+        body = While(condition, body)
+        if(not(initializer == None)):
+            body = Block([initializer, body])
+        return body
+
     # ifStmt         → "if" "(" expression ")" statement ( "else" statement )? 
     def if_statement(self):
-        print("adding 'if' statement")
+        # print("adding 'if' statement")
         self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if' statement")
         condition = self.expression()
-        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' after 'if' statement")
+        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for 'if' statement")
         then_branch = self.statement()
         else_branch = None
         if(self.match([TokenType.ELSE])):
@@ -84,7 +128,7 @@ class Parser():
     # block          → "{" declaration* "}" ;
     def block(self):
         statements = []
-        print(f"building block statement")
+        # print(f"building block statement")
         while(not(self.check(TokenType.RIGHT_BRACE)) and (not(self.is_at_end()))):
             print("appending statement")
             statements.append(self.declaration())

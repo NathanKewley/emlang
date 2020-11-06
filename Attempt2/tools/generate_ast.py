@@ -28,7 +28,8 @@ statements = [
     ["Var", ["name", "expression"]],
     ["Yeet", ["expression"]],
     ["Block", ["statements"]],
-    ["If", ["condition", "then_branch", "else_branch"]]
+    ["If", ["condition", "then_branch", "else_branch"]],
+    ["While", ["condition", "body"]]
 ]
 
 # load the Jinja2 templates

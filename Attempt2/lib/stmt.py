@@ -12,6 +12,8 @@ class Stmt():
 			pass
 		def visit_if_stmt(self, expr):
 			pass
+		def visit_while_stmt(self, expr):
+			pass
 		
 class Expression(Stmt):
     def __init__(self, expression):
@@ -57,4 +59,12 @@ class If(Stmt):
         
     def accept(self, visitor):
         return visitor.visit_if_stmt(self)
+
+class While(Stmt):
+    def __init__(self, condition, body):
+        self.condition = condition
+        self.body = body
+        
+    def accept(self, visitor):
+        return visitor.visit_while_stmt(self)
 

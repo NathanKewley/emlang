@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While
 from lib.error import Error
 from lib.environment import Environment
 import numbers
@@ -33,6 +33,12 @@ class Interpreter(Expr, Stmt):
                 self.execute(statement)
         finally:
             self.environment = previous
+
+    # visit while statement
+    def visit_while_stmt(self, stmt):
+        while(self.is_truthful(self.evaluate(stmt.condition))):
+            self.execute(stmt.body)
+        return None
 
     # visit if statement
     def visit_if_stmt(self, stmt):

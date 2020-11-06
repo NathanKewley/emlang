@@ -296,12 +296,16 @@ primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression "
 ```
 
 ```
-___VERSION 6___ (Conditionals and Branching)
+___VERSION 6___ (Conditionals and Branching and looping)
 program        → declaration* EOF
 
 declaration    → varDecl | statement 
 
-statement      → exprStmt | printStmt | block | ifStmt
+statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt
+
+whileStmt      → "while" "(" expression ")" statement
+
+forStmt        → "for" "(" (varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement
 
 ifStmt         → "if" "(" expression ")" statement ( "else" statement )? 
 

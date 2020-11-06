@@ -8,7 +8,7 @@ class Environment():
 
     def define(self, name, value):
         if(not(name in self.values)):
-            print(f"[DEBUG] defining variable {name} with value {value}")
+            # print(f"[DEBUG] defining variable {name} with value {value}")
             self.values[name] = value
         else:
             Error.throw_generic(self, f"Variable '{name}' already defined")
