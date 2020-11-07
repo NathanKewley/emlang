@@ -17,7 +17,7 @@ class Lexer():
             "else": TokenType.ELSE,
             "false": TokenType.FALSE,
             "for": TokenType.FOR,
-            "function": TokenType.FUNCTION,
+            "fun": TokenType.FUN,
             "if": TokenType.IF,
             "nil": TokenType.NIL,
             "or": TokenType.OR,

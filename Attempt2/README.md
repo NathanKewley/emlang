@@ -199,125 +199,24 @@ Preccedence rules for the emlang grammar are important as they remove ambiguity 
 ```
 
 The grammar definition for emlang is as follows (Note: this only implmements a subset for now and will be expanded on):
-```
-__VERSION 1__ (NO PRECEDENCE)
-
-expression     → literal
-                 | unary
-                 | binary
-                 | grouping ;
-
-literal        → NUMBER | STRING | "true" | "false" | "nil" ;
-grouping       → "(" expression ")" ;
-unary          → ( "-" | "!" ) expression ;
-binary         → expression operator expression ;
-operator       → "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
-```
 
 ```
-__VERSION 2__ (WITH PRECEDENCE)
-
-expression     → equality
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
-```
-
-```
-___VERSION 3___ (WITH INITIAL STATEMENTS)
-program        → statement* EOF
-
-statement      → exprStmt | printStmt ;
-
-exprStmt       → expression ";" ;
-printStmt      → "print" expression ";" ;
-yeetStmt       → "YEET" expression ";" ;
-
-expression     → equality
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
-```
-
-```
-___VERSION 4___ (WITH DECLERATIONS FOR VARIABLES AND ASSIGNMENT)
 program        → declaration* EOF
-
-declaration    → varDecl | statement ;
-
-statement      → exprStmt | printStmt ;
-
-varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-
-exprStmt       → expression ";" ;
-printStmt      → "print" expression ";" ;
-yeetStmt       → "YEET" expression ";" ;
-
-expression     → assignment ;
-assignment     → IDENTIFIER "=" assignment | equality ;
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;
-```
-
-```
-___VERSION 5___ (WITH BLOCKS!)
-program        → declaration* EOF
-
-declaration    → varDecl | statement ;
-
-statement      → exprStmt | printStmt | block ;
-
-block          → "{" declaration* "}" ;
-
-varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-
-exprStmt       → expression ";" ;
-printStmt      → "print" expression ";" ;
-yeetStmt       → "YEET" expression ";" ;
-
-expression     → assignment ;
-assignment     → IDENTIFIER "=" assignment | equality ;
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;
-```
-
-```
-___VERSION 6___ (Conditionals and Branching and looping)
-program        → declaration* EOF
-
-declaration    → varDecl | statement 
-
+declaration    → varDecl | statement | funcDecl
+funDecl        → "fun" function 
+function       → IDENTIFIER "(" parameters? ")" block 
 statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt
-
 whileStmt      → "while" "(" expression ")" statement
-
 forStmt        → "for" "(" (varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement
-
 ifStmt         → "if" "(" expression ")" statement ( "else" statement )? 
-
 block          → "{" declaration* "}" 
-
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" 
 
 exprStmt       → expression ";" 
 printStmt      → "print" expression ";" 
 yeetStmt       → "YEET" expression ";" 
-
 expression     → assignment 
+
 assignment     → IDENTIFIER "=" assignment | logic_or
 logic_or       → logic_and ( "or" logic_and )* ;
 logic_and      → equality ( "and" equality )* ;
@@ -325,6 +224,8 @@ equality       → comparison ( ( "!=" | "==" ) comparison )*
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* 
 term           → factor ( ( "-" | "+" ) factor )* 
 factor         → unary ( ( "/" | "*" ) unary )* 
-unary          → ( "!" | "-" ) unary | primary 
+unary          → ( "!" | "-" ) unary | call
+call           → primary ( "(" arguments? ")" )*
+arguments      → expression ( "," expression )*
 primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER 
 ```

@@ -14,6 +14,8 @@ class Expr():
 			pass
 		def visit_logical_expr(self, expr):
 			pass
+		def visit_call_expr(self, expr):
+			pass
 		
 class Binary(Expr):
 	def __init__(self, left, operator, right):
@@ -69,4 +71,13 @@ class Logical(Expr):
 		
 	def accept(self, visitor):
 		return visitor.visit_logical_expr(self)
+
+class Call(Expr):
+	def __init__(self, callee, paren, arguments):
+		self.callee = callee
+		self.paren = paren
+		self.arguments = arguments
+		
+	def accept(self, visitor):
+		return visitor.visit_call_expr(self)
 

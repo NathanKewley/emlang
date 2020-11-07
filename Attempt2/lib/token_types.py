@@ -34,7 +34,7 @@ class TokenType(Enum):
     CLASS = 23
     ELSE = 24
     FALSE = 25
-    FUNCTION = 26
+    FUN = 26
     FOR = 27
     IF = 28
     NIL = 29

@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Function
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -24,6 +24,8 @@ class Parser():
         # try:
         if(self.match([TokenType.VAR])):
             return self.var_declaration()  
+        if(self.match([TokenType.FUN])):
+            return self.function_declaration("Function")              
         return self.statement()
         # except:
         #     self.synchronize()
@@ -44,6 +46,22 @@ class Parser():
         if(self.match([TokenType.FOR])):
             return self.for_statement()                                                               
         return self.expression_statement()
+
+    # funcDecl       → "fun" function
+    def function_declaration(self, kind):
+        name = self.consume(TokenType.IDENTIFIER, f"Expecting a name for you {kind}??")
+        parameters = []
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'function identifier'")
+        if(not(self.check(TokenType.RIGHT_PAREN))):
+            parameters.append(self.consume(TokenType.IDENTIFIER, "expect parameter name"))
+            while(self.match([TokenType.COMMA])):
+                parameters.append(self.consume(TokenType.IDENTIFIER, "expect parameter name"))
+                if(len(parameters) > 255):
+                    Error.throw_token_error(self.peek(), "Funciton cant have more than 255 parameters")                
+        self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for function declaration")
+        self.consume(TokenType.LEFT_BRACE, "Expect '{' for function body")
+        body = self.block()
+        return Function(name, parameters, body)
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
     def var_declaration(self):
@@ -219,7 +237,30 @@ class Parser():
             operator = self.previous()
             right = self.unary()
             return Unary(operator, right)
-        return self.primary()
+        return self.call()
+
+    # call           → primary ( "(" arguments? ")" )*
+    def call(self):
+        expr = self.primary()
+        while(True):
+            if(self.match([TokenType.LEFT_PAREN])):
+                expr = self.finish_call(expr)
+            else:
+                break
+        return expr
+
+    def finish_call(self, callee):
+        arguments = []
+        if(not(self.check(TokenType.RIGHT_PAREN))):
+            arguments.append(self.expression())
+            while(self.match([TokenType.COMMA])):
+                arguments.append(self.expression())
+                if(arguments.len() > 255):
+                    Error.throw_generic(self, "Cant have more than 255 arguments for a function")
+        paren = self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for function call argument list")
+        print(f"creating function call with {len(arguments)} arguments")
+        return Call(callee, paren, arguments)
+            
 
     # primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
     def primary(self):
@@ -237,14 +278,14 @@ class Parser():
             return Grouping(expr)
         if(self.match([TokenType.IDENTIFIER])):
             return Variable(self.previous())
-        Error.throw_token_error(self.peek(), "Expect Expression")
+        Error.throw_token_error(self, self.peek(), "Expect Expression")
 
     def match(self, token_types):
         for token_type in token_types:
             if(self.check(token_type)):
                 self.advance()
                 return True
-        return False
+        return False     
 
     def check(self, token_type):
         if (self.is_at_end()):
@@ -269,7 +310,7 @@ class Parser():
         if(self.check(token_type)):
             return self.advance()
         token = self.peek()
-        Error.throw_token_error(token, error)
+        Error.throw_token_error(self, token, error)
         return None
 
     def synchronize(self):

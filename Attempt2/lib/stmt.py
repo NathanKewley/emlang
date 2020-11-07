@@ -14,6 +14,8 @@ class Stmt():
 			pass
 		def visit_while_stmt(self, expr):
 			pass
+		def visit_function_stmt(self, expr):
+			pass
 		
 class Expression(Stmt):
     def __init__(self, expression):
@@ -67,4 +69,13 @@ class While(Stmt):
         
     def accept(self, visitor):
         return visitor.visit_while_stmt(self)
+
+class Function(Stmt):
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+        
+    def accept(self, visitor):
+        return visitor.visit_function_stmt(self)
 

@@ -1,15 +1,29 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical
+from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
 from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While
+from lib.emlCallable import EmlCallable
+from lib.emlFunction import EmlFunction
 from lib.error import Error
 from lib.environment import Environment
+from datetime import datetime
 import numbers
 
 # The interpreter takes an expression and evaluates it
 class Interpreter(Expr, Stmt):
     def __init__(self):
-        self.environment = Environment()
+        self.globals = Environment()
+        self.environment = self.globals
+
+        # define native funtions (this should be broken out elsewhere)
+        def clock(EmlCallable):
+            def arity(self):
+                return 0
+            def call(self, interpreter, arguments):
+                return datetime.now()
+            def toString(self):
+                return "[Native emlang Function]"
+        self.globals.define("clock", clock)
 
     def interprert(self, statements):
         # try:
@@ -33,6 +47,23 @@ class Interpreter(Expr, Stmt):
                 self.execute(statement)
         finally:
             self.environment = previous
+
+    # visit call expression
+    def visit_call_expr(self, expr):
+        callee = self.evaluate(expr.callee)
+        arguments = []
+        for argument in expr.arguments:
+            arguments.append(self.evaluate(argument))
+        function: EmlCallable = callee
+        if(not(len(arguments) == function.arity())):
+            Error.throw_token_error(self, expr.paren, f"Expected {function.arity()} arguments but got {len(arguments)} 😞")
+        return function.call(self, arguments)
+
+    # visit function statement
+    def visit_function_stmt(self, stmt):
+        function = EmlFunction(stmt)
+        self.environment.define(stmt.name.lexeme, function)
+        return None
 
     # visit while statement
     def visit_while_stmt(self, stmt):
