@@ -31,7 +31,8 @@ statements = [
     ["Block", ["statements"]],
     ["If", ["condition", "then_branch", "else_branch"]],
     ["While", ["condition", "body"]],
-    ["Function", ["name", "params", "body"]]
+    ["Function", ["name", "params", "body"]],
+    ["Return", ["keyword" ,"value"]]
 ]
 
 # load the Jinja2 templates

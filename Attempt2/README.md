@@ -205,7 +205,7 @@ program        → declaration* EOF
 declaration    → varDecl | statement | funcDecl
 funDecl        → "fun" function 
 function       → IDENTIFIER "(" parameters? ")" block 
-statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt
+statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt | returmStmt
 whileStmt      → "while" "(" expression ")" statement
 forStmt        → "for" "(" (varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement
 ifStmt         → "if" "(" expression ")" statement ( "else" statement )? 
@@ -216,6 +216,7 @@ exprStmt       → expression ";"
 printStmt      → "print" expression ";" 
 yeetStmt       → "YEET" expression ";" 
 expression     → assignment 
+returnStmt     → "return" expression? ";"
 
 assignment     → IDENTIFIER "=" assignment | logic_or
 logic_or       → logic_and ( "or" logic_and )* ;

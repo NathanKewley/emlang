@@ -1,15 +1,15 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Return
 from lib.emlCallable import EmlCallable
 from lib.emlFunction import EmlFunction
 from lib.error import Error
 from lib.environment import Environment
 from lib.emlStandard import EmlClock
+from lib.returnException import ReturnException
 import numbers
 
-# The interpreter takes an expression and evaluates it
 class Interpreter(Expr, Stmt):
     def __init__(self):
         self.globals = Environment()
@@ -30,7 +30,6 @@ class Interpreter(Expr, Stmt):
     def execute(self, statement):
         statement.accept(self)
 
-    # evaluate blocks { }
     def execute_block(self, statements, environment):
         previous = self.environment
         try:
@@ -41,7 +40,6 @@ class Interpreter(Expr, Stmt):
         finally:
             self.environment = previous
 
-    # visit call expression
     def visit_call_expr(self, expr):
         callee = self.evaluate(expr.callee)
         arguments = []
@@ -52,19 +50,22 @@ class Interpreter(Expr, Stmt):
             Error.throw_token_error(self, expr.paren, f"Expected {function.arity()} arguments but got {len(arguments)} 😞")
         return function.call(self, arguments)
 
-    # visit function statement
     def visit_function_stmt(self, stmt):
         function = EmlFunction(stmt)
         self.environment.define(stmt.name.lexeme, function)
         return None
 
-    # visit while statement
+    def visit_return_stmt(self, stmt):
+        value = None
+        if(not(stmt.value == None)):
+            value = self.evaluate(stmt.value)
+        raise ReturnException(value)
+
     def visit_while_stmt(self, stmt):
         while(self.is_truthful(self.evaluate(stmt.condition))):
             self.execute(stmt.body)
         return None
 
-    # visit if statement
     def visit_if_stmt(self, stmt):
         if(self.is_truthful(self.evaluate(stmt.condition))):
             self.execute(stmt.then_branch)
@@ -72,23 +73,19 @@ class Interpreter(Expr, Stmt):
             self.execute(stmt.else_branch)
         return None
 
-    # visit block statement
     def visit_block_stmt(self, stmt):
         self.execute_block(stmt.statements, Environment(self.environment))
         return None
 
-    # evaluate expression statement
     def visit_expression_stmt(self, stmt):
         self.evaluate(stmt.expression)
         return None
 
-    # evaluate print statement
     def visit_print_stmt(self, stmt):
         value = self.evaluate(stmt.expression)
         print(value)
         return None
 
-    # evaluate var statement
     def visit_var_stmt(self, stmt):
         value = None
         if(not(stmt.expression) == None):
@@ -96,19 +93,16 @@ class Interpreter(Expr, Stmt):
         self.environment.define(stmt.name, value)
         return None
 
-    # variable assignment statement
     def visit_assign_expr(self, expr):
         value = self.evaluate(expr.value)
         self.environment.assign(expr.name.lexeme, value)
         return value
 
-    # evaluate yeet statement
     def visit_yeet_stmt(self, stmt):
         value = self.evaluate(stmt.expression)
         print(value.upper())
         return None
 
-    # evaluate logic expression
     def visit_logical_expr(self, expr):
         left = self.evaluate(expr.left)
         if(expr.operator.token_type == TokenType.OR):
@@ -119,19 +113,15 @@ class Interpreter(Expr, Stmt):
                 return left
         return self.evaluate(expr.right)
 
-    # evaluate variable expression
     def visit_variable_expr(self, expr):
         return self.environment.get(expr.name.lexeme)
 
-    # evaluate Literal expressions
     def visit_literal_expr(self, expr):
         return(expr.value)
 
-    # evaluate Grouping expressions
     def visit_grouping_expr(self, expr):
         return(self.evaluate(expr.expression))
 
-    # evaluate Unary expressions
     def visit_unary_expr(self, expr):
         right = self.evaluate(expr.right)
 
@@ -141,7 +131,6 @@ class Interpreter(Expr, Stmt):
             return(not (self.is_truthful(right)))
         return(None)
 
-    # evaluate Binary expressions
     def visit_binary_expr(self, expr):
         left = self.evaluate(expr.left)
         right = self.evaluate(expr.right)

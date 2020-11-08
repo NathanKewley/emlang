@@ -1,6 +1,7 @@
 from lib.error import Error
 from lib.emlCallable import EmlCallable
 from lib.environment import Environment
+from lib.returnException import ReturnException
 
 class EmlFunction(EmlCallable):
     def __init__(self, declaration):
@@ -10,7 +11,10 @@ class EmlFunction(EmlCallable):
         self.environment = Environment(interpreter.globals)
         for i in range(0, len(self.declaration.params)):
             self.environment.define(self.declaration.params[i].lexeme, arguments[i])
-        interpreter.execute_block(self.declaration.body, self.environment)
+        try:
+            interpreter.execute_block(self.declaration.body, self.environment)
+        except ReturnException as e:
+            return e.value.value
 
     def arity(self):
         return len(self.declaration.params)

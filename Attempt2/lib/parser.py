@@ -1,7 +1,7 @@
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
-from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Function
+from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Function, Return
 from lib.error import Error
 
 # This parser will use recursice descent to generate the abasract syntax tree.
@@ -44,7 +44,9 @@ class Parser():
         if(self.match([TokenType.WHILE])):
             return self.while_statement()   
         if(self.match([TokenType.FOR])):
-            return self.for_statement()                                                               
+            return self.for_statement()       
+        if(self.match([TokenType.RETURN])):
+            return self.return_statement()                                                                           
         return self.expression_statement()
 
     # funcDecl       → "fun" function
@@ -62,6 +64,15 @@ class Parser():
         self.consume(TokenType.LEFT_BRACE, "Expect '{' for function body")
         body = self.block()
         return Function(name, parameters, body)
+
+    # return Stmt    → "return" expression? ";"
+    def return_statement(self):
+        keyword = self.previous()
+        value = None
+        if(not(self.check(TokenType.SEMICOLON))):
+            value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after return statement")
+        return Return(keyword, value)
 
     # varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
     def var_declaration(self):
