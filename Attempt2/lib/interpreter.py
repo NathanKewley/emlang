@@ -6,7 +6,7 @@ from lib.emlCallable import EmlCallable
 from lib.emlFunction import EmlFunction
 from lib.error import Error
 from lib.environment import Environment
-from datetime import datetime
+from lib.emlStandard import EmlClock
 import numbers
 
 # The interpreter takes an expression and evaluates it
@@ -15,15 +15,8 @@ class Interpreter(Expr, Stmt):
         self.globals = Environment()
         self.environment = self.globals
 
-        # define native funtions (this should be broken out elsewhere)
-        def clock(EmlCallable):
-            def arity(self):
-                return 0
-            def call(self, interpreter, arguments):
-                return datetime.now()
-            def toString(self):
-                return "[Native emlang Function]"
-        self.globals.define("clock", clock)
+        # add native functions to the global scope
+        self.globals.define("clock", EmlClock())
 
     def interprert(self, statements):
         # try:

@@ -7,3 +7,4 @@ fun test(a) {
 }
 
 test(5);
+print(clock());

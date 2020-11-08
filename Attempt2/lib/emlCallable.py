@@ -1,7 +1,7 @@
 from lib.error import Error
 
 class EmlCallable():
-    def __init__(self, callee):
+    def __init__(self):
         pass
     def call(self, interpreter, arguments):
         pass
