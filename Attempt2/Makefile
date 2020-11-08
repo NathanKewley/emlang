@@ -1,7 +1,9 @@
 .PHONY: test
 test:
 	@echo "--------------------RUNNING TESTS--------------------"
-	pytest -q tests/test_lexer.py
+	pytest -q tests/testLexer.py
+	pytest -q tests/testParser.py
+	pytest -q tests/testInterpreter.py
 
 .PHONY: generate-ast
 generate-ast:

@@ -17,3 +17,5 @@ else {
   print "something else";
   YEET "something else else";
 }
+
+print "statements = 3";
