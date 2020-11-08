@@ -266,7 +266,7 @@ class Parser():
             arguments.append(self.expression())
             while(self.match([TokenType.COMMA])):
                 arguments.append(self.expression())
-                if(arguments.len() > 255):
+                if(len(arguments) > 255):
                     Error.throw_generic(self, "Cant have more than 255 arguments for a function")
         paren = self.consume(TokenType.RIGHT_PAREN, "Expect closing ')' for function call argument list")
         print(f"creating function call with {len(arguments)} arguments")
