@@ -51,7 +51,7 @@ class Interpreter(Expr, Stmt):
         return function.call(self, arguments)
 
     def visit_function_stmt(self, stmt):
-        function = EmlFunction(stmt)
+        function = EmlFunction(stmt, self.environment)
         self.environment.define(stmt.name.lexeme, function)
         return None
 
