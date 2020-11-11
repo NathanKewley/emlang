@@ -41,7 +41,7 @@ class Lexer():
         # token = Token(TokenType.EOF, "", None, self.line)
         # self.tokens.append(token)
         self.add_token(TokenType.EOF)
-        print(f"{len(self.tokens)}: tokens")
+        # print(f"{len(self.tokens)}: tokens")
         return(self.tokens)
 
     # scans a single token and returns it
@@ -74,7 +74,7 @@ class Lexer():
         elif(char == '/'): 
             # if a comment
             if(self.match('/')):
-                print(f"Comment Detected [//]")
+                # print(f"Comment Detected [//]")
                 # advance until we hit and end of line (end of comment)
                 while (self.peek() != '\n' and not(self.is_at_end())): 
                     self.advance()
@@ -95,7 +95,7 @@ class Lexer():
         elif(char == ' ' or char == '\r' or char == '\t'): pass
         elif(char == '\n'): 
             self.line = self.line + 1
-            print(f"[{self.line}] new line detected")
+            # print(f"[{self.line}] new line detected")
 
         # A catch all at the end for any unsupported characters, we want to throw an error for these
         else:
@@ -108,13 +108,13 @@ class Lexer():
 
     # add a token onto the list
     def add_token(self, token_type):
-        print(f"adding token {token_type}")
+        # print(f"adding token {token_type}")
         token = Token(token_type, self.source[self.start:self.current], None, self.line)
         self.tokens.append(token)
 
     # add a token onto the list that contains a value
     def add_token_with_value(self, token_type, value):
-        print(f"adding token {token_type} with value {value}")
+        # print(f"adding token {token_type} with value {value}")
         token = Token(token_type, self.source[self.start:self.current], value, self.line)
         self.tokens.append(token)        
 

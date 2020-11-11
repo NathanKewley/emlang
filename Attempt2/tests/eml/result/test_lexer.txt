@@ -1,0 +1,4 @@
+hello
+5 is equal to 5
+this will not print
+statements = 3

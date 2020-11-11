@@ -13,7 +13,7 @@ class Parser():
     def parse(self):
         statements = []
         while(not (self.is_at_end())):
-            print(f"adding statement {self.peek().token_type}")
+            # print(f"adding statement {self.peek().token_type}")
             decl = self.declaration()
             # print(decl)
             statements.append(decl)
@@ -159,10 +159,10 @@ class Parser():
         statements = []
         # print(f"building block statement")
         while(not(self.check(TokenType.RIGHT_BRACE)) and (not(self.is_at_end()))):
-            print("appending statement")
+            # print("appending statement")
             statements.append(self.declaration())
         self.consume(TokenType.RIGHT_BRACE, "Expect closing '}'")
-        print(f"statements for block {statements}")
+        # print(f"statements for block {statements}")
         return statements
 
     # eexpression     → assignment ;

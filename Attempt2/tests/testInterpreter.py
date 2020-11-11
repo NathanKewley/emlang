@@ -7,7 +7,5 @@ class TestParser(TestBase):
 
     def test_interpreter(self):
         source = self.get_file_contents("tests/eml/test_lexer.eml")
-        assert self.interpret(source) == """hello
-5 is equal to 5
-this will not print
-statements = 3"""
+        result = self.get_file_contents("tests/eml/result/test_lexer.txt")
+        assert self.interpret(source) == result

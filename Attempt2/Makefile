@@ -1,10 +1,10 @@
 .PHONY: test
 test:
 	@echo "--------------------RUNNING TESTS--------------------"
-	pytest -q tests/testLexer.py
-	pytest -q tests/testParser.py
-	pytest -q tests/testInterpreter.py
-	pytest -q tests/testBinary.py
+	pytest -q tests/testLexer.py --color yes -rapP
+	pytest -q tests/testParser.py --color yes -rapP
+	pytest -q tests/testInterpreter.py --color yes -rapP
+	pytest -q tests/testBinary.py --color yes -rapP
 
 .PHONY: generate-ast
 generate-ast:
