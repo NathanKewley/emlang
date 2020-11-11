@@ -1,0 +1,31 @@
+if(5 > 4) {
+    print "Larger Than";
+}
+if(5 < 4) {
+    print "true";
+}else{
+    print "Less Than";
+    print "else";
+}
+if(5 == 5){
+    print "equals";
+}
+if((5 >= 5) and (3 >= 2)){
+    print "larger than or equal to";
+    print "and";
+}
+if((5 <= 5) or (3 == 2)){
+    print "less than or equal to";
+    print "or";
+}
+if(5 == 5){
+    if(5 > 4){
+        if(4 < 5){
+            if(5 >= 5){
+                if(5 <= 5){
+                    print "nested if";
+                }
+            }
+        }
+    }
+}
