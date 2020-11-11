@@ -4,6 +4,7 @@ test:
 	pytest -q tests/testLexer.py
 	pytest -q tests/testParser.py
 	pytest -q tests/testInterpreter.py
+	pytest -q tests/testBinary.py
 
 .PHONY: generate-ast
 generate-ast:

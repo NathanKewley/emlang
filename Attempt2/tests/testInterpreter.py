@@ -5,12 +5,9 @@ from tests.testBase import TestBase
 
 class TestParser(TestBase):
 
-    def test_token_generation(self):
+    def test_interpreter(self):
         source = self.get_file_contents("tests/eml/test_lexer.eml")
-        lexer = Lexer(source)
-        tokens = lexer.lex()
-        parser = Parser(tokens)
-        statements = parser.parse()
-        interpreter = Interpreter()
-        interpreter.interprert(statements)
-        assert True
+        assert self.interpret(source) == """hello
+5 is equal to 5
+this will not print
+statements = 3"""

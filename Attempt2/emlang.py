@@ -2,7 +2,6 @@ from lib.lexer import Lexer
 from lib.error import Error
 from lib.parser import Parser
 from lib.interpreter import Interpreter
-from ast_printer import Ast_Printer
 import sys
 
 # This is the main entry point to the program, this is essentailly a shell that calls our to the requited parts. 
