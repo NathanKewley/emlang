@@ -9,3 +9,19 @@ class EmlClock(EmlCallable):
         return datetime.now()
     def toString(self):
         return "[Native emlang Function]"
+
+class EmlListLength(EmlCallable):
+    def arity(self):
+        return 1
+    def call(self, interpreter, arguments):
+        return len(arguments[0])
+    def toString(self):
+        return "[Native emlang Function]"
+
+class EmlListItem(EmlCallable):
+    def arity(self):
+        return 2
+    def call(self, interpreter, arguments):
+        return float(arguments[0][int(arguments[1])])
+    def toString(self):
+        return "[Native emlang Function]"

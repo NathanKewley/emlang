@@ -55,6 +55,8 @@ class Lexer():
         elif(char == ')'): self.add_token(TokenType.RIGHT_PAREN)
         elif(char == '{'): self.add_token(TokenType.LEFT_BRACE)
         elif(char == '}'): self.add_token(TokenType.RIGHT_BRACE)
+        # elif(char == '['): self.add_token(TokenType.LEFT_LIST)
+        # elif(char == ']'): self.add_token(TokenType.RIGHT_LIST)
         elif(char == ','): self.add_token(TokenType.COMMA)
         elif(char == '.'): self.add_token(TokenType.DOT)
         elif(char == '-'): self.add_token(TokenType.MINUS)
@@ -87,6 +89,9 @@ class Lexer():
         elif(char == '"'): self.string()
         elif(self.is_digit(char)): self.number()
 
+        # Handle lists
+        elif(char == '['): self.emlist()
+
         # Now we need to identiy identifiers (lel). These will either start with an alphanumrical character or an underscore
         elif(self.is_alpha_num(char)): self.identifier()
 
@@ -108,13 +113,13 @@ class Lexer():
 
     # add a token onto the list
     def add_token(self, token_type):
-        # print(f"adding token {token_type}")
+        print(f"adding token {token_type}")
         token = Token(token_type, self.source[self.start:self.current], None, self.line)
         self.tokens.append(token)
 
     # add a token onto the list that contains a value
     def add_token_with_value(self, token_type, value):
-        # print(f"adding token {token_type} with value {value}")
+        print(f"adding token {token_type} with value {value}")
         token = Token(token_type, self.source[self.start:self.current], value, self.line)
         self.tokens.append(token)        
 
@@ -191,8 +196,29 @@ class Lexer():
         # advance once for the closing "
         self.advance()
 
-        # strip the quoted from the string and add the token
+        # strip the quotes from the string and add the token
         self.add_token_with_value(TokenType.STRING, self.source[self.start+1 : self.current-1])      
+
+    # this is where we build what a list object is
+    def emlist(self):
+        # go through the list definition until we find the closing ']'
+        while(not(self.peek() == ']')) and (not(self.is_at_end())):
+            if(self.peek() == '\n'): 
+                self.line = self.line + 1
+            self.advance()          
+
+        # if we hit the end of the file before the closing " we need to error
+        if(self.is_at_end()):
+            Error.throw(self, line = self.line, where = '[', message = "Unterminated List")
+
+        # advance once for the closing ]
+        self.advance()
+
+        # we have the string that makes the list elements now
+        list_items = self.source[self.start+1 : self.current-1].split(",")
+
+        # strip the quotes from the string and add the token
+        self.add_token_with_value(TokenType.EMLIST, list_items)
 
     # we need to determine if the identifier is reserved or user defined and treat it as such
     def identifier(self):

@@ -1,12 +1,12 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
+from lib.expr import Expr, Binary, Literal, EMList, Grouping, Unary, Variable, Assign, Logical, Call
 from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Return
 from lib.emlCallable import EmlCallable
 from lib.emlFunction import EmlFunction
 from lib.error import Error
 from lib.environment import Environment
-from lib.emlStandard import EmlClock
+from lib.emlStandard import EmlClock, EmlListLength, EmlListItem
 from lib.returnException import ReturnException
 import numbers
 
@@ -17,6 +17,8 @@ class Interpreter(Expr, Stmt):
 
         # add native functions to the global scope
         self.globals.define("clock", EmlClock())
+        self.globals.define("listLength", EmlListLength())
+        self.globals.define("listItem", EmlListItem())
 
     def interprert(self, statements):
         # try:
@@ -119,6 +121,9 @@ class Interpreter(Expr, Stmt):
     def visit_literal_expr(self, expr):
         return(expr.value)
 
+    def visit_emlist_expr(self, expr):
+        return(expr.value)
+
     def visit_grouping_expr(self, expr):
         return(self.evaluate(expr.expression))
 
@@ -195,7 +200,6 @@ class Interpreter(Expr, Stmt):
     def check_number_operands(self, operator, left, right):
         if(not(isinstance(left, numbers.Real))):
             Error.throw_runtime_error(operator, "left operand must be a number")
-        # if(not((right.type() is int) or (right.type() is float))):
         if(not(isinstance(right, numbers.Real))):
             Error.throw_runtime_error(operator, "right operand must be a number")
         return True

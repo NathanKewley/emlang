@@ -6,6 +6,8 @@ class Expr():
 			pass
 		def visit_literal_expr(self, expr):
 			pass
+		def visit_emlist_expr(self, expr):
+			pass			
 		def visit_unary_expr(self, expr):
 			pass
 		def visit_variable_expr(self, expr):
@@ -39,6 +41,13 @@ class Literal(Expr):
 		
 	def accept(self, visitor):
 		return visitor.visit_literal_expr(self)
+
+class EMList(Expr):
+	def __init__(self, value):
+		self.value = value
+		
+	def accept(self, visitor):
+		return visitor.visit_emlist_expr(self)		
 
 class Unary(Expr):
 	def __init__(self, operator, right):

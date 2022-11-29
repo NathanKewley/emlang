@@ -1,6 +1,6 @@
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.expr import Expr, Binary, Literal, Grouping, Unary, Variable, Assign, Logical, Call
+from lib.expr import Expr, Binary, Literal, EMList, Grouping, Unary, Variable, Assign, Logical, Call
 from lib.stmt import Stmt, Expression, Print, Var, Yeet, Block, If, While, Function, Return
 from lib.error import Error
 
@@ -273,7 +273,7 @@ class Parser():
         return Call(callee, paren, arguments)
             
 
-    # primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+    # primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | list ;
     def primary(self):
         if(self.match([TokenType.FALSE])):
             return Literal(False)
@@ -283,10 +283,12 @@ class Parser():
             return Literal(None)
         if(self.match([TokenType.STRING, TokenType.NUMBER])):
             return Literal(self.previous().literal)
+        if(self.match([TokenType.EMLIST])):
+            return EMList(self.previous().literal)            
         if(self.match([TokenType.LEFT_PAREN])):
             expr = self.expression()
-            self.consume(TokenType.RIGHT_PAREN, "Except ')' after expression.")
-            return Grouping(expr)
+            self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
+            return Grouping(expr)         
         if(self.match([TokenType.IDENTIFIER])):
             return Variable(self.previous())
         Error.throw_token_error(self, self.peek(), "Expect Expression")
