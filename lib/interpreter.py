@@ -6,7 +6,7 @@ from lib.emlCallable import EmlCallable
 from lib.emlFunction import EmlFunction
 from lib.error import Error
 from lib.environment import Environment
-from lib.emlStandard import EmlClock, EmlListLength, EmlListItem
+from lib.emlStandard import EmlClock, EmlListLength, EmlListItem, EmlLoadFileToList
 from lib.returnException import ReturnException
 import numbers
 
@@ -19,6 +19,7 @@ class Interpreter(Expr, Stmt):
         self.globals.define("clock", EmlClock())
         self.globals.define("listLength", EmlListLength())
         self.globals.define("listItem", EmlListItem())
+        self.globals.define("loadFileToList", EmlLoadFileToList())
 
     def interprert(self, statements):
         # try:
