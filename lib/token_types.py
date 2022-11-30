@@ -48,3 +48,7 @@ class TokenType(Enum):
     WHILE = 37
     EOF = 38
     YEET = 39
+    
+    # Advent of Code Additions
+    EMLIST = 40
+    # RIGHT_LIST = 41    
