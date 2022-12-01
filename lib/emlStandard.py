@@ -22,7 +22,10 @@ class EmlListItem(EmlCallable):
     def arity(self):
         return 2
     def call(self, interpreter, arguments):
-        return float(arguments[0][int(arguments[1])])
+        try:
+            return float(arguments[0][int(arguments[1])])
+        except:
+            return arguments[0][int(arguments[1])]
     def toString(self):
         return "[Native emlang Function]"
 
